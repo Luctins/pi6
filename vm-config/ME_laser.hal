@@ -1,1 +1,3 @@
-# -*- mode: sh
+# -*- mode: sh -*-
+
+# TODO: configure parallel port with parport

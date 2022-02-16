@@ -1,3 +1,14 @@
 # -*- mode: sh -*-
 
 # TODO: configure parallel port with parport
+
+#load the step generator with three channels X,Y,Z
+loadrt stepgen step_type=0,0,0 ctrl_type=p,p,p
+loadrt threads name1=fast fp1=0 period1=50000 name2=slow period=1000000
+
+net X-step parport.0.pin-0-out0 => stepgen.0.
+#net X-dir
+#net Y-step
+#net Y-dir
+#net Z-step
+#net Z-dir

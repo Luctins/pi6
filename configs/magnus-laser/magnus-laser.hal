@@ -50,8 +50,12 @@ setp parport.0.pin-09-out-invert 1
 net estop-out       => parport.0.pin-09-out
 
 # manually added
-loadrt and2 count=0
 loadrt and2 count=1
+addf and2.0 base-thread
+
+loadrt or2 count=2
+addf or2.0 servo-thread
+addf or2.1 servo-thread
 
 # or all the errors into estop
 #                __
@@ -61,24 +65,23 @@ loadrt and2 count=1
 #                    ---|__/
 # estop-btn --------/
 net fault-in or2.0.in0    <= parport.0.pin-15-in
-net door-sensor or2.o.in1 <= parport.0.pin-17-in
+net door-sensor or2.0.in1 <= parport.0.pin-17-in
 net errors-or or2.1.in0   <= or2.0.out
 net estop-btn or2.1.in1   <= parport.0.pin-10-in
-net estop-ext              <= or2.1.out
+net estop-ext             <= or2.1.out
 
 # and the active low bypass button and the all-limits input
-loadrt and2 count=2
 #loadrt not2 count=0
 #net fault not2.0.in <=
-net fault-not and2.0.in0  <= parport.0.pin-16-in
+net bypass and2.0.in0     <= parport.0.pin-16-in
 net _all-limit and2.0.in1 <= parport.0.pin-11-in
-net all-limit             <= and2.2.out
-
-
+net all-limit             <= and2.0.out
 
 net home-x          <= parport.0.pin-12-in
 net home-y          <= parport.0.pin-13-in
-net home-z          <= parport.0.pin-15-in
+net home-z          <= parport.0.pin-14-in
+
+
 
 setp stepgen.0.position-scale [JOINT_0]SCALE
 setp stepgen.0.steplen 1

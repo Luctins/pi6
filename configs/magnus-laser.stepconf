@@ -59,19 +59,19 @@
   <property name="pin17" type="string" value="unused-output"/>
   <property name="pin17inv" type="bool" value="False"/>
   <property name="pin1inv" type="bool" value="False"/>
-  <property name="pin2" type="string" value="spindle-pwm"/>
+  <property name="pin2" type="string" value="xstep"/>
   <property name="pin2inv" type="bool" value="False"/>
   <property name="pin3" type="string" value="xdir"/>
   <property name="pin3inv" type="bool" value="False"/>
-  <property name="pin4" type="string" value="ydir"/>
+  <property name="pin4" type="string" value="ystep"/>
   <property name="pin4inv" type="bool" value="False"/>
-  <property name="pin5" type="string" value="zdir"/>
+  <property name="pin5" type="string" value="ydir"/>
   <property name="pin5inv" type="bool" value="False"/>
-  <property name="pin6" type="string" value="xstep"/>
+  <property name="pin6" type="string" value="zstep"/>
   <property name="pin6inv" type="bool" value="False"/>
-  <property name="pin7" type="string" value="ystep"/>
+  <property name="pin7" type="string" value="zdir"/>
   <property name="pin7inv" type="bool" value="False"/>
-  <property name="pin8" type="string" value="zstep"/>
+  <property name="pin8" type="string" value="spindle-pwm"/>
   <property name="pin8inv" type="bool" value="False"/>
   <property name="pin9" type="string" value="estop-out"/>
   <property name="pin9inv" type="bool" value="True"/>

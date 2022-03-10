@@ -184,12 +184,12 @@
   <property name="xleadscrew" type="float" value="66.0"/>
   <property name="xmaxacc" type="float" value="750.0"/>
   <property name="xmaxlim" type="float" value="200.0"/>
-  <property name="xmaxvel" type="float" value="25.0"/>
-  <property name="xmicrostep" type="float" value="2.0"/>
+  <property name="xmaxvel" type="float" value="50.0"/>
+  <property name="xmicrostep" type="float" value="1.0"/>
   <property name="xminlim" type="float" value="0.0"/>
   <property name="xpulleyden" type="float" value="1.0"/>
   <property name="xpulleynum" type="float" value="1.0"/>
-  <property name="xscale" type="float" value="6.06060606061"/>
+  <property name="xscale" type="float" value="3.0303030303"/>
   <property name="xsteprev" type="float" value="200.0"/>
   <property name="yhomepos" type="float" value="0.0"/>
   <property name="yhomesw" type="float" value="0.0"/>
@@ -198,12 +198,12 @@
   <property name="yleadscrew" type="float" value="70.0"/>
   <property name="ymaxacc" type="float" value="750.0"/>
   <property name="ymaxlim" type="float" value="200.0"/>
-  <property name="ymaxvel" type="float" value="25.0"/>
-  <property name="ymicrostep" type="float" value="2.0"/>
+  <property name="ymaxvel" type="float" value="50.0"/>
+  <property name="ymicrostep" type="float" value="1.0"/>
   <property name="yminlim" type="float" value="0.0"/>
   <property name="ypulleyden" type="float" value="1.0"/>
   <property name="ypulleynum" type="float" value="1.0"/>
-  <property name="yscale" type="float" value="5.71428571429"/>
+  <property name="yscale" type="float" value="2.85714285714"/>
   <property name="ysteprev" type="float" value="200.0"/>
   <property name="zhomepos" type="float" value="0.0"/>
   <property name="zhomesw" type="float" value="0.0"/>
@@ -213,10 +213,10 @@
   <property name="zmaxacc" type="float" value="750.0"/>
   <property name="zmaxlim" type="float" value="0.0"/>
   <property name="zmaxvel" type="float" value="25.0"/>
-  <property name="zmicrostep" type="float" value="2.0"/>
+  <property name="zmicrostep" type="float" value="1.0"/>
   <property name="zminlim" type="float" value="-100.0"/>
   <property name="zpulleyden" type="float" value="1.0"/>
   <property name="zpulleynum" type="float" value="1.0"/>
-  <property name="zscale" type="float" value="80.0"/>
+  <property name="zscale" type="float" value="40.0"/>
   <property name="zsteprev" type="float" value="200.0"/>
 </stepconf>

@@ -4,6 +4,6 @@ Este repositório é referente à matéria de projeto integrador VI, do curso de
 
 Documenta o projeto da "Máquina de marcação à Laser Cartesiana"
 
-[./doc/artigo/img/maquina-final.jpg]
+<img src="./doc/artigo/img/maquina-final.jpg" alt="máquina completa">
 
 Elaborado no semestre de 2021.2

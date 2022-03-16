@@ -1,4 +1,4 @@
-* Mesa Laser Cartesiana
+# Mesa Laser Cartesiana
 
 Este repositório é referente à matéria de projeto integrador VI, do curso de engenharia mecatrônica do IFSC Câmpus Florianópolis, departamento DAMM.
 

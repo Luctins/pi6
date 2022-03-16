@@ -32,6 +32,7 @@
 % ---
 \usepackage{lmodern}			% Usa a fonte Latin Modern
 \usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+
 \usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
 \usepackage{indentfirst}		% Indenta o primeiro parágrafo de cada seção.
 \usepackage{color}				% Controle das cores
@@ -39,7 +40,7 @@
 \usepackage{microtype} 			% para melhorias de justificação
 
 %\usepackage{nomencl} 			% Lista de simbolos
-\graphicspath{ {./images/} }
+\graphicspath{ {./img/} }
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{booktabs}
@@ -59,12 +60,14 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{pgfplots}
-%\usepackage{pdfpages}
+\usepackage{pdfpages}
 \usepackage{float}
 \usepackage{makecell}
 \usepackage{multicol}
 \usepackage{subcaption}
 \usepackage{minted}
+
+\usepackage{listings}
 %\usepackage{pgfplotstable}
 
 
@@ -78,6 +81,8 @@
 \tikzstyle{output} = [coordinate]
 \tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
 
+\AddToHook{cmd/section/before}{\clearpage}% quebra página sempre que inicia uma nova seção
+
 % ---
 
 % ---
@@ -87,7 +92,11 @@
 \usepackage[alf]{abntex2cite}	% Citações padrão ABNT
 % ---
 
-\newcommand{\nomeproduto}{\textit{Parvus Scala: \\ \large{Sistema de controle de nível}}}%
+\DeclareRobustCommand{\makered}{\color{red}}
+\newcommand{\T}{{\makered TODO}~}
+\newcommand{\R}{{\makered REV}}
+
+\newcommand{\nomeproduto}{\textit{Parvus Eternus \\ \large{Retrofit de Máquina}}}%
 \newcommand{\diam}{$\varnothing$}%
 \newcommand{\xPID}{130}%
 \newcommand{\yPID}{1.2}%
@@ -95,6 +104,8 @@
 \newcommand{\EE}{Elipse E3}%
 \newcommand{\Py}{\textit{Python}}%
 \newcommand{\Mb}{\textit{Modbus}}%
+\newcommand{\LCNC}{LinuxCNC}
+\newcommand{\stepconf}{\texttt{stepconf}}
 
 \captionsetup[figure]{labelfont=small,textfont=small} %configura caption das imagens
 % ---
@@ -163,10 +174,10 @@
 
 \titulo{\nomeproduto}
 
-\autor{Henrique T. Moresco \and Henrique Wolf \and Lucas M. Mendes \and \ Matheus R. Willemann} 
+\autor{Henrique T. Moresco \and Lucas M. Mendes \and \ Matheus R. Willemann} 
 
 \instituicao{Instituto Federal de Santa Catarina: Câmpus Florianópolis\\ Departamento de Metal Mecânica\\ Engenharia Mecatrônica}
-\orientador{Profa. Cynthia B. Scheffer-Dutra, Prof. Francisco R. M. Mota}
+\orientador{Prof. Gregory Chagas da Costa Gomes, prof. Nelso Gauze Bonacorso, prof. Claudio Abilio da Silveira, prof. Evandro Bolzan}
 
 \local{Av. Mauro Ramos, 950 – Centro, Florianópolis}
 
@@ -248,10 +259,10 @@
 
 \tableofcontents*
 
-\newpage 
-\section*{Lista de Figuras}
-\listof{figure}{}
-\newpage
+% \newpage 
+% \section*{Lista de Figuras}
+% \listof{figure}{}
+% \newpage
 
 %\begin{titlinpage}
 
@@ -274,15 +285,15 @@
 \textual
 
 
-\begin{resumoumacoluna}
-     Este documento detalha o desenvolvimento de um sistema de controle para o nível de um fluido em um tanque atmosférico. Englobando todo o processo de desenvolvimento do controlador, conexão de rede, cálculos dos modelos e sistema de operação. Essas etapas utilizaram de simulações computacionais com diferentes \textit{softwares}, tais como o \factorio{} e o \textit{Matlab}. A operação do sistema se baseia nos sinais recebidos pelos sensores de nível e de vazão de saída, e controla o nível operando a abertura de duas válvulas de entrada e saída conforme a altura de água no tanque. Dentro do projeto foi desenvolvido um modelo para entendimento do comportamento da planta, comparando a situação simulada com a calculada e posteriormente foram feitos 3 controladores para tentar estabilizar o sistema. Com o sistema de controle feito, criou-se um supervisório para operação da planta. %Além disso, deve trabalhar de forma 100\% automatizada, prevendo possíveis perturbações externas e (finalização). Todos os cálculos utilizados no desenvolvimento do sistema de controle, bem como suas justificativas, estão registrados no documento e foram realizados com base em uma planta padrão fornecida pelos professores.  
+% \begin{resumoumacoluna}
+%      Este documento detalha o desenvolvimento de um sistema de controle para o nível de um fluido em um tanque atmosférico. Englobando todo o processo de desenvolvimento do controlador, conexão de rede, cálculos dos modelos e sistema de operação. Essas etapas utilizaram de simulações computacionais com diferentes \textit{softwares}, tais como o \factorio{} e o \textit{Matlab}. A operação do sistema se baseia nos sinais recebidos pelos sensores de nível e de vazão de saída, e controla o nível operando a abertura de duas válvulas de entrada e saída conforme a altura de água no tanque. Dentro do projeto foi desenvolvido um modelo para entendimento do comportamento da planta, comparando a situação simulada com a calculada e posteriormente foram feitos 3 controladores para tentar estabilizar o sistema. Com o sistema de controle feito, criou-se um supervisório para operação da planta. %Além disso, deve trabalhar de forma 100\% automatizada, prevendo possíveis perturbações externas e (finalização). Todos os cálculos utilizados no desenvolvimento do sistema de controle, bem como suas justificativas, estão registrados no documento e foram realizados com base em uma planta padrão fornecida pelos professores.  
 
-     % São destacadas informações técnicas e etapas de desenvolvimento do projeto de uma máquina para fabricação de estrutura de postes circulares automatizada, utilizando sensores, motores, componentes elétricos/eletrônicos e atuadores pneumáticos. Além disso, também foram construídos um modelo em CAD do produto, simulação de acionamentos eletromecânicos e programação de CLP em \textit{ladder}. O objetivo desta máquina é produzir uma estrutura circular de barras de aço soldadas da forma mais automática possível, cabendo ao usuário apenas repor os materiais necessários e operar os 3 botões no processo de fabricação. Todos os componentes foram dimensionados e selecionados conforme os cálculos e justificativas registrados no documento e as simulações foram realizadas em \textit{softwares} próprios para averiguar o funcionamento.
+%      % São destacadas informações técnicas e etapas de desenvolvimento do projeto de uma máquina para fabricação de estrutura de postes circulares automatizada, utilizando sensores, motores, componentes elétricos/eletrônicos e atuadores pneumáticos. Além disso, também foram construídos um modelo em CAD do produto, simulação de acionamentos eletromecânicos e programação de CLP em \textit{ladder}. O objetivo desta máquina é produzir uma estrutura circular de barras de aço soldadas da forma mais automática possível, cabendo ao usuário apenas repor os materiais necessários e operar os 3 botões no processo de fabricação. Todos os componentes foram dimensionados e selecionados conforme os cálculos e justificativas registrados no documento e as simulações foram realizadas em \textit{softwares} próprios para averiguar o funcionamento.
     
-     \vspace{\onelineskip}
-     \noindent
-     \textbf{Palavras Chave}: Controle de nível, PID, Tanque atmosférico, Integração, Simulação.
- \end{resumoumacoluna}
+%      \vspace{\onelineskip}
+%      \noindent
+%      \textbf{Palavras Chave}: Controle de nível, PID, Tanque atmosférico, Integração, Simulação.
+%  \end{resumoumacoluna}
 
 %\renewcommand{\resumoname}{Abstract}
 %\begin{resumoumacoluna}
@@ -297,988 +308,1652 @@
 
 \newpage
 
-\section{Introdução ao Problema}
-\label{ssec:intro}
+\section{Definição do Problema}
+\label{sec:intro}
+\subsection{Retrofit de Máquina}
+O desafio do projeto consistia no \textit{retrofit} de uma máquina de corte a laser, a qual inicialmente encontrava-se com a fiação não identificada, sensores mal posicionados, \textit{drivers} de deslocamento dessincronizados e sem qualquer documentação para entendimento e operação do equipamento.
 
-Em um cenário industrial, existe a necessidade de desenvolver sistemas de sensoriamento e controle para extração de dados e automação de processos. Um bom exemplo de situação que exige automação é o sistema de controle de nível e fluxo em um reservatório, sendo esse o objeto de trabalho deste projeto.
+Além disso, um dos principais pontos desse projeto é a migração do sistema de operação, o qual inicialmente era Mach 3 e precisava ser trocado para \LCNC. Isso implica em adaptações no \textit{hardware} e implementação de \textit{software}.
 
-Dessa forma, o problema consiste na identificação e validação de um modelo matemático que descreve o comportamento de uma planta composta por:
-\begin{itemize}
-\item Recipiente cilíndrico com 3 m de altura de 2 m de diâmetro;
-\item Válvula de entrada regulável, com vazão máxima de $0.25~\frac{m^3}{s}$;
-\item Válvula de saída regulável, com vazão máxima de $0.3543~\frac{m^3}{s}$;
-\item Sensor de nível (altura de coluna d'água);
-\item Sensor de fluxo (vazão).
-\end{itemize}
-Além disso, faz parte do problema permitir que um usuário realize a operação desse sistema em uma intereface de supervisório.
 \begin{figure}[H]
     \centering
-    \caption{Exemplo de tanque com medição de nível -  \href{https://instrumentos-lince.com.br/aplicacao/tanque-de-vacuo-para-o-sistema-de-esgoto/}{instrumentos lince}} \includegraphics[width=0.6\textwidth]{img/tanque-de-vacuo-para-o-sistema-de-esgoto.png}
-    \label{fig:tank}
+    \includegraphics[width=0.8\textwidth]{img/maquina_original.jpg}
+    \caption{Máquina antes do \textit{RetroFit}}
+    \label{fig:maq-original}
 \end{figure}
 
-\newpage
-\section{Objetivos}
+\subsection{Objetivos e Resultados Esperados}
+%essa sessão ficou redundante com a de objetivos, recomendo removermos
+Tendo em vista que este é um projeto de \textit{retrofit}, o principal objetivo era tornar a máquina de corte a laser funcional novamente, para que pudesse realizar processos de usinagem de forma precisa. Além disso, alguns aspectos adicionais são fundamentais e foram considerados como objetivos do projeto.
 
-Para auxiliar no planejamento de etapas do projeto, foram elencados e ordenados os objetivos principais para o projeto do sistema:
+Dito isso, seguem abaixo os principais objetivos e aspectos do projeto de \textit{retrofit}:
 \begin{itemize}
-    \item Avaliar a planta, com o objetivo de se familiarizar com o processo;
-    \item Identificar e listar variáveis relevantes para o controle da planta;
-    %\item Extrair parâmetros de interesse para a modelagem posterior;
-    \item Desenvolver um modelo matemático;
-    %preliminar
-    que descreva o processo em malha aberta;
-    \item Testar e validar a conexão do controlador com a planta;
-    \item Desenvolver um controlador para regular o sistema; 
-    \item Avaliar a eficiência do controlador através dos ensaios com o sistema;
-    \item Selecionar o controlador mais adequado para o sistema;
-    \item Desenvolver uma comunicação entre operador e planta;
-    \item Desenvolver uma interface para operação do usuário do sistema.
-    %\item Exportar os dados, obtidos em simulação, para um cliente externo;
-    %\item Comparar os resultados obtidos nos dois itens anteriores.
+\item Maquina de corte a laser com deslocamento em 2,5 eixos, sendo o deslocamento em X e Y usado para o processo de corte e o eixo Z para regulagem de altura e foco do laser;
+\item Adaptação do sistema e substituição da placa controladora para que o sistema opere com \LCNC;
+\item Tornar máquina mais fácil de ser utilizada, através de uma melhora na interface e desenvolvimento de um procedimento operacional padrão e um manual de operação;
+\item Maior precisão no processo, melhorando o sistema de sensoreamento;
+\item Melhora nos aspectos de segurança da máquina, tanto no que diz respeito à mecânica, quanto ao circuito.
 \end{itemize}
 
-\newpage
-
-
-\section{Modelagem do Sistema em Malha Aberta}
-\subsection{Metodologia}
-% Programa em \textit{python} que controla a planta de forma a oter dados utilizados de forma a avaliar a sua resposta utilizando alguma ferramenta de análise de dados, para extrair o parâmetros para um modelo do sistema.
-
-% \begin{center}
-% \begin{tikzpicture}[auto, node distance=2cm,>=latex']
-% \node [input, name=input] {};
-%     \node [sum, right of=input] (sum1) {};
-%     \node [sum, right of=sum1] (sum2) {};
-%     \node [block, right of=sum2] (system) {G(s)};
-%     \node [block, right of=system, node distance= 3cm] (controller) {\equation$\frac{1}{s}$};
-%     \node [output, right of=controller] (output) {};
-    
-%     \node [block, below of=system] (feedback2) {$K_1$};
-%     \node [block, below of=feedback2] (feedback1) {$K_2$};
-    
-%     \draw [draw,->] (input) -- node {$R(s)$} (sum1);
-%     \draw [draw,->] (sum1) -- node {} (sum2);
-%     \draw [draw,->] (sum2) -- node {} (system);
-%     %\draw [->] (sum1) -- node {$e$} (controller);
-%     \draw [->] (system) -- node [name=u] {} (controller);
-%     \draw [->] (controller) -- node [name=y] {$Y(s)$} (output);
-%     \draw [->] (u) |- (feedback2);
-%     \draw [->] (feedback2) -| node[pos=0.99] {$-$} node {} (sum2);
-%     \draw [->] (y) |- (feedback1);
-%     \draw [->] (feedback1) -| node[pos=0.99] {$-$} node [near end] {$y_m$} (sum1);
-% \end{tikzpicture}
-% \end{center}
-
-\subsubsection{Desenvolvimento da Planta Modelo}
-
-Para simular o reservatório com as válvulas e sensores descritos na sessão \ref{ssec:intro}, foi utilizado o programa \factorio {} partindo de uma planta exemplo. O modelo em questão é uma planta de tanque atmosférico, controlada por um painel elétrico e com leitores de nível e fluxo.
- 
- %figura planta Factoryio   
-\begin{figure}[H]
-    \centering
-    \caption{Planta de simulação no Software \factorio{}}
-    \includegraphics[width=0.5\textwidth]{img/factory IO.PNG}
-    \label{fig:planta-factory-io}
-\end{figure}
-    
-Com o modelo carregado, foi realizado um diagrama de blocos para regulagem manual das válvulas e visualização dos valores de fluxo e nível no \textit{Control.io} (figura \ref{fig:control-io}). Apesar de não usado para a extração dos dados, esse programa de controle simples permitiu um estudo inicial da planta, identificando por exemplo que o nível se estabiliza na metade da altura sempre que as duas válvulas estiverem com o mesmo valor.
-
- %figura control.io   
-\begin{figure}[H]
-    \centering
-    \caption{Blocos de controle no Software Control.io}
-    \includegraphics[width=.6\textwidth]{img/control io.PNG}
-    \label{fig:control-io}
-\end{figure}
-
-\subsection{Obtenção de Dados}
-\label{ssec:obt-dados}
-De forma a obter dados, foi utilizada uma planta simulada na ferramenta \factorio, expondo seus atuadores por meio de um servidor \textit{Modbus} TCP (\textit{Transmission Control Protocol}). Este servidor foi controlado por um cliente escrito em \textit{python} e teve seus registradores conectados de maneira que pudesse controlar a simulação (fig. \ref{fig:conn-modbus}), os atuadores, e ler os sensores. 
-
-\begin{figure}[H]
-    \centering
-    \caption{Diagrama de conexão do servidor Modbus}
-    \includegraphics[width=\textwidth]{img/neg-factio-modbus-conn.png}
-    \label{fig:conn-modbus}
-\end{figure}
-
-O cliente controla a planta de forma a estabelecer as condições iniciais para e realizar um teste de resposta a uma entrada de tipo \textit{step} unitário no sinal de controle da válvula de entrada à partir do equilíbrio ($h = 5m,~ v_{entrada}=v_{saida}=5.00$).
-
-Os dados obtidos a partir deste teste foram exportados em formato CSV (\textit{Comma Separated Values}) e carregados no \textit{software} de análise matemática.
-
-\subsubsection{Avaliação dos Dados}
-
-Tomando os valores do experimento obtidos em \ref{ssec:obt-dados}, foi desenvolvida uma planilha para servir como banco de dados. Nessa planilha foram realizados os cálculos para obtenção dos modelos que descrevem a função, utilizando \texttt{query()},  fórmulas matemáticas e outras funções. O \textit{Google Sheets} foi a ferramenta adotada pois permite edição simultânea, organização na forma de banco de dados e conservação dos resultados de diversos experimentos. 
-
-Os modelos matemáticos estudados foram:
-\label{sec:metodo-modelos}
+\section{Requisitos e Especificações do Projeto}
+Os requisitos levantados para o \textit{retrofit} da máquina, inicialmente, foram:
 \begin{itemize}
-    \item Ziegler/Nichols e Hägglund: Apesar de diferentes, ambos os métodos utilizam uma reta tangente traçada sobre o trecho de máxima inclinação, partindo do primeiro ponto de inflexão da curva e indo até o segundo, e portanto foram representados juntos aqui. Com a reta traçada, os parâmetros $t_1$, $t_2$ e $\theta$ são obtidos a partir do ponto de intersecção dela com o eixo t e do ponto em que o valor da função é igual ao valor máximo do experimento.
-    
-    \begin{minipage}{\linewidth}
-        \centering
-        \captionof{figure}{Exemplo da reta de Ziegler/Nichols}
-        \includegraphics[width=0.5\textwidth]{img/ex-zn.png}
-        \label{fig:ex-zn}
-    \end{minipage}  
-    
-    Assim, como o caráter da resposta do sistema é sobreamortecido, ela não apresenta pontos de inflexão e esse modelo não pode ser aplicado.
-
-    \item Smith: Diferente dos métodos de Ziegler/Nichols e Hägglund, este não utiliza o trecho de máxima inclinação para determinar os parâmetros necessários. Ao invés disso, utiliza-se os pontos correspondentes a 28.3\% e 63.2\% do valor máximo de saída, onde a curva costuma se aproximar muito de uma linearidade. 
-    
-    \begin{minipage}{\linewidth}
-        \centering
-        \captionof{figure}{Exemplo dos pontos de interesse para o método de Smith}
-        \includegraphics[width=0.5\textwidth]{img/ex-smith.png}
-        \label{fig:ex-smith}
-    \end{minipage}
-    
-    \item Sundaresan/Krishnaswamy: Semelhante ao método de Smith, também são definidos pontos onde a curva se aproxima da linearidade, porém nesse caso os pontos correspondem a 35.3\% e 85.3\% do valor máximo de saída.
-    
-    \begin{minipage}{\linewidth}
-        \centering
-        \captionof{figure}{Exemplo dos pontos de interesse para o método de Sundaresan/Krishnaswamy}
-        \includegraphics[width=0.5\textwidth]{img/ex-sundaresan.png}
-        \label{fig:ex-sund}
-    \end{minipage}
-    
+    \item Marcar madeira - De acordo as especificações do laser e como já era utilizado antes do \textit{retrofit};
+    \item Volume de trabalho de pelo menos 22cm por 22cm (inicial de 22cm por 17cm);
+    \item Documentação do esquema elétrico;
+    \item Identificação de componentes e fios utilizando anilhas;
+    \item Alimentação geral: 220V; \textit{drivers}: 42V; placa: 5V; laser: 12V periféricos: 24V;
+    \item Painel elétrico mais seguro, com tampas nas canaletas e suportes para os componentes fixados;
+    \item Interface clara de uso, com botões e sinaleiras;
+    \item Novo arranjo de sensores de fim de curso e \textit{home}, evitando colisões e melhorando durabilidade e precisão do sistema.
+    \item Sensores ópticos como sensores de \textit{home}, para que não haja contato físico durante a movimentação dos eixos.
 \end{itemize}
 
-
-\subsubsection{Teste do Modelo Matemático}
-
-Foi implementado um \textit{script} na ferramenta \textit{Matlab/Octave} para análise e comparação dos modelos obtidos com os dados da planta, que foram extraídos os dados da tabela de dados CSV. O resultado foi analisado a partir de um gráfico gerado usando a função \textit{step}, mostrando os comportamentos dos modelos e da planta.
-
-\newpage
-\subsection{Resultados Obtidos}
-\subsubsection{Comportamento da Planta Simulada}
-
-Para a análise do comportamento da planta, foi realizada uma simulação em um intervalo de 200 segundos. Nesse intervalo foi aplicado um sinal de entrada degrau, ou seja, o sinal da válvula de entrada mudou de 5 para 6.
-% \begin{figure}[H]
-%     \centering
-%     \caption{Dados obtidos da planta}
-%     \includegraphics[width=0.8\textwidth]{img/dados-planta.png}
-%     \label{fig:dados-planta}
-%\end{figure}
-\begin{figure}[H]
-    \centering
-    \caption{Dados Obtidos da planta}
-    \begin{tikzpicture}
-    \begin{axis}[xlabel=t (s),
-                xmin = 0,
-                ylabel=Nível (V),
-                font=\small,
-                width = \textwidth,
-                height = 0.5\textwidth ]
-    \addplot table [y=level, x=t, mark=none]{step_test.dat};
-    %\addlegendentry{Resposta da planta}
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:dados-planta}
-\end{figure}
-
-O gráfico apresentado na figura \ref{fig:dados-planta} representa o nível de água no tanque em função do tempo após o sinal aplicado na válvula de entrada. Como pode-se observar, a curva resultante do experimento apresenta um comportamento sobreamortecido, estabilizando o nível em 7V.
-
-Além disso, algumas variáveis puderam ser obtidas, as quais estão destacadas na tabela \ref{tab:var-obtidas}:
+Assim, a lista final de especificações ficou:
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{c|c|c}
+    \begin{tabular}{c|c}
         \toprule
-        $\Delta$ Nível (V) & Tempo de Acomodação (s) & Tempo de Subida (s)\\
+        Especificação & Valor \\
         \midrule
-        2.19 & 91.120 & 55.310 \\
+        Potência do laser & 2,5W \\
+        Volume de trabalho & 22cm X 22cm\\2        Alimentação: \textit{Drivers} & 48V \\
+        Alimentação: Placa & 5V \\
+        Alimentação: Laser & 12V \\
+        Alimentação: Periféricos & 24V \\
+        Sensores \textit{home} sem contato físico & \\
+        Identificação e documentação & \\
+        Elementos de segurança e suporte & \\
+        \bottomrule
+     \end{tabular}
+     \caption{Especificações}
+     \label{tab:fontes}
+ \end{table}
+
+\section{Lista de Componentes}
+\subsection{Componentes Mecânicos}
+%subdividir em dimensões gerais e componentes fabricados/alterados
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c}
+        \toprule
+        Componente & Nome & Tipo & 1 Volta do Motor \\
+        \midrule
+        Guias de trilho & 3856697 & Movimento & 70mm Y 66mm X \\
+        Guias de fusos de esferas  &  & Movimento &  5mm \\
+        Amortecedor p/ porta (2) & Hardt 50N & Movimento & \\
+        Contato p/ home (3) & Chapa de aluminio & Suporte & \\
+        Suportes p/ sensores (9) & Peça impressão 3D & Suporte &  \\
+        \bottomrule
+     \end{tabular}
+     \caption{Componentes Mecânicos}
+     \label{tab:fontes}
+ \end{table}
+ 
+\subsection{Componentes Elétricos}
+%separar fontes de componentes de controle
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c}
+        \toprule
+        Componente & Nome & Tipo & Tensão de Trabalho & Corrente\\
+        \midrule
+        Fonte \textit{Drivers} & Akiyama300W & Potência & 220V -> 42V & 7,1A \\
+        Fonte 24V & S25-24 & Potência & 220V -> 24V & 1,1A \\
+        Fonte 5V & NES-15-5 & Potência & 220V -> 5V & 3A \\
+        Fonte 12V & MCM12V & Potência & 220V -> 12V & 5A \\
         \bottomrule
     \end{tabular}
-    \caption{Variáveis Obtidas}
-    \label{tab:var-obtidas}
+    \caption{Fontes}
+    \label{tab:fontes}
 \end{table}
-% t_settle =  92.120
-
-% descrever comportamento planta
-\subsection{Obtenção dos Modelos Matemáticos}
-
-Para a obtenção dos modelos, foram testados os dois métodos detalhados nos itens da seção \label{sec:metodo-modelos} que podem ser aplicados nesse sistema.
-%Matlab para desenvolvimento do modelo matemático e octave
-%Ajuste para adequação dos parametros
-%\subsubsection{Ziegler/Nichols e Hägglund}
-%Como descrito anteriormente, esses modelos usam uma reta tangente partindo dos pontos de inflexão para determinar os parâmetros. No entanto, dado o caráter da resposta do sistema (sobreamortecido), ela não apresenta pontos de inflexão e as tentativas de desenhar a reta se mostraram inconclusivas.
-
-%Sendo assim, esses modelos foram descartados e foi dado seguimento na análise com os outros métodos, que não partem de uma reta tangente.
-
-\subsubsection{Smith}
-O método de Smith, também explicado anteriormente em \ref{sec:metodo-modelos}, foi o mais eficiente e preciso na comparação com o comportamento da planta. Assim, obteve-se os dados para a função de transferência, como $t_1$, $t_2$ $\tau$ e $\theta$:
-\begin{equation}
-\begin{split}
-    t_1 = 7.94 s \\
-    t_2 = 23.74 s \\
-    \tau = 1.5* ( t_2 - t_1) = 23.70 \\
-    \theta = t_2 - \tau = 0.04 \\
-    G_p(s) = \frac{K_p e^{-\theta s}}{\tau s + 1} \\
-    \theta \approx 0 \\
-    G_p(s) = \frac{K_p}{\tau s + 1} \\
-    G_p(s) = \frac{2.19}{23.7 s + 1} \\
-\end{split}
-\end{equation}
-
-Como pode-se perceber, a variável $\theta$ (tempo de atraso) encontrada foi muito próxima de zero, podendo ser desprezada. Além disso, tendo em vista que esse termo representa o atraso da resposta, ele foi suprimido pois o teste com sinal de entrada degrau foi feito sem atraso.
-
-\subsubsection{Sundaresan/Krishnaswamy}
-Utilizando os métodos previamente descritos em \ref{sec:metodo-modelos}, a função obtida foi a exposta na equação \ref{eq:sundersan}, novamente ignorando o termo de atraso, como feito para o método de Smith. Assim, obteve-se os dados para a função de transferência, como $t_1$, $t_2$, $\tau$ e $\theta$:
-\begin{equation}
-\begin{split}
-    t_1 = 10.5 s \\
-    t_2 = 45.37 s \\
-    \tau = 0.6* ( t_2 - t_1) = 20.922  \\
-    \theta = 1.3*t_1 - 0.29*t2 = 0.4927 \\
-    G_p(s) = \frac{K_p e^{-\theta s}}{\tau s + 1} \\
-    \theta \approx 0 \\ 
-    G_p(s) = \frac{K_p}{\tau s + 1} \\
-    G_p(s) = \frac{2.19}{20.92 s + 1}
-\end{split}
-\label{eq:sundersan}
-\end{equation}
-
-\subsection{Comparação dos Modelos}
-Após obtidos os modelos matemáticos simplificados, foi gerado um gráfico com as três curvas: Resultado do experimento, Modelo de Smith e Modelo de Sundaresan. 
-% \begin{figure}[H]
-%     \centering
-%     \caption{Comparação dos modelos}
-%     \includegraphics[width=0.8\textwidth]{img/comparacao-modelos.png}
-%     \label{fig:comp-modelos}
-% \end{figure}
-\begin{figure}[H]
-    \centering
-    \caption{Comparação dos modelos}
-    \begin{tikzpicture}
-    \begin{axis}[xlabel=t (s),
-                 xmin=0, xmax=220,
-                 ymin=0,
-                 ylabel=Nível (m),
-                 legend pos=south east,
-                 width = 0.95\textwidth,
-                 height = 0.7\textwidth]
-    \addplot[ultra thick, brown] table [y=Y_sund, x=T_sund, mark=none]{model_response.dat};
-    \addlegendentry{Sundaresan}
-    \addplot[ultra thick, red] table [y=y, x=t, mark=none]{step_test_norm.dat};
-    \addlegendentry{Resposta da planta}
-    \addplot[ultra thick, blue] table [y=Y_smith, x=T_smith, mark=none]{model_response.dat};
-    \addlegendentry{Smith}
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:comp-modelos-sund}
-\end{figure}
-
-Vale ressaltar que na figura \ref{fig:comp-modelos-sund}, as curvas de resposta da planta (em azul) e de Smith (em vermelho) estão visualmente sobrepostos, o que pode gerar confusão visual mas demonstra a acurácia do método no sistema aplicado.
-
-A figura \ref{fig:comp-modelos-sund} mostra, em vermelho, a curva obtida pelo modelo de Smith, em cinza, o modelo de Sundaresan e, em azul, o resultado obtido na planta simulada. Destaca-se que as curvas atingem o mesmo valor de 2m de crescimento de nível no momento de estabilização e se comportam de forma semelhante.
-
-Vale ressaltar que na figura \ref{fig:comp-modelos-sund} foi removido o valor médio de forma a obter uma visualização melhor. Além disso, os valores no eixo t vão desde o instante que é alterado o valor da válvula de entrada (estando no equilíbrio com $h=5m$) até a estabilização da planta.
-
-Pode-se observar que o modelo de Smith é muito próximo dos dados do teste de entrada degrau, sendo que a maior parte da diferença advém de erro de quantização (Erro originado da precisão do sensor de nível), já que o sistema de leitura possui precisão de até 0.01 V.
-
-Dessa forma, para as próximas etapas do projeto o ponto de partida será o modelo simplificado de Smith, descrito pela equação: 
-\begin{equation}
-     G(s) = \frac{2.19}{23.7 s + 1}
-     \label{eq:planta}
-\end{equation}
-De modo a operar entre $0 \to 1$, o modelo normalizado da planta será o modelo obtido dividido por 10, pois o valor recebido pelo sensor para desenvolvimento da equação estava na faixa entre $0 \to 10$ V:
-\begin{equation}
-    G(s) = \frac{0.219}{23.7 s + 1}
-\end{equation}
  
-% descrever  diferenças entre modelos
-
-%\subsection{Conclusão}
-    %Reobservando os objetivos de estudar a planta, extrair os parâmetros fundamentais, desenvolver um modelo para equacionamento do sistema e exportar os dados. Pode-se dizer que o projeto cumpriu aquilo que foi estipulado até então, pois através dos dados extraídos com a planta simulada, o servidor \textit{modbus} e o modelo de equação desenvolvido, foi possível compreender o comportamento da planta e obter as informações necessárias para o desenvolvimento de um controlador PID.
-
-	%Olhando para as próximas etapas do trabalho, ainda será acrescido a esse projeto um sistema de controle e um supervisório para operação da planta. Dessa forma, foram concluídas apenas as etapas de extração de dados e estudo do projeto.
-
-\section{Modelagem do Controlador}
-\subsection{Arquitetura de Comunicação}
-
-% \begin{center}
-% \begin{tikzpicture}[auto, node distance=2cm,>=latex]
-    % \node [input, name=SP, node distance=3cm] {};
-    % \node [sum, right of=SP] (sum) {};
-    
-    % \node [block, right of=sum] (controller) {Controlador};
-    % \node [input, node distance=1.5cm, below of=controller] {Python};
-    
-    % \node [block, right of=controller, node distance=5cm] (sys) {Planta};
-    
-    % \node [block, right of=controller] (modbusin) {Modbus};
-    % \node [block, right of=modbusin] (system) {Planta};
-    % \node [output, right of=system] (output) {Nível};
-    % \node [block, below of=modbusin] (modbusout) {Modbus};
-    
-    % \node [block, below of=system] (feedback2) {$K_1$};
-    % \node [block, below of=feedback2] (feedback1) {$K_2$};
-    
-    % \draw [->] node {} (SP) -- node {Setpoint} (sum);
-    % \draw [draw,->] (sum) -- node {} (controller);
-    % \draw [->] (controller) -- node [name=u] {Sinal de controle} (modbusin);
-    % \draw [->] (modbusin) -- node [u] {Sinal de controle} (system);
-    % \draw [->] (output) -- node {$-$} (sum);
-    % \draw [->] (sum) -- node {} (controller);
-    % \draw [->] (input) -- node [] {+} (sum);
-    % \draw [->] (output) -- node [name=y] (output);
-    % \draw [->] (y) |- (sum);
-    % \draw [->] (feedback2) -| node[pos=0.99] {$-$} node {} (sum2);
-    % \draw [->] (y) |- (feedback1);
-    % \draw [->] (feedback1) -| node[pos=0.99] {$-$} node [near end] {$y_m$} (sum1);
-% \end{tikzpicture}
-% \end{center}
-
-
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \caption{Layout orientado a comunicação}
-    \includegraphics[width=\textwidth]{img/arq-comm.png}
-    \label{fig:arq-comm}
-\end{figure}
+    \begin{tabular}{c|c|c|c|c}
+        \toprule
+        Componente              & Nome              & Tipo          & Tensão de Trabalho    & Corrente\\
+        \midrule
+        Motores (4)             & AK23/10F8FN1.8    & Acionamento   & 5.4V(S)/2V(P)         & 1A(S)/2A(P) \\
+        Laser de corte          & Módulo laser      & Acionamento   & 12V                   & 208mA \\
+        Drivers (4)             & STR8-5000-158     & Potência      & 24V a 75V             & 2.5A a 8A \\
+        Fusíveis (4)            &                   & Segurança     &                       & 7A \\
+        Disjuntor               & K32a1c20          & Segurança     & 220V                  & 16A \\
+        Contatora               & CJX2-1810z        & Sinal         & 220V-sinal  24V       & 18A \\
+        Relés                   & JZD1RC3           & Sinal         & 24V                   & 6A \\
+        Botão com LED           & M20-1B | M20-IL   & Sinal         & 24V                   & <20mA (LED) \\
+        Sensores mecânicos (6)  & Uso padrão NC     & Sinal         & 1A                    & 125Vac \\
+        Botão Cogumelo          & sa1000            & Sinal         & 10A                   & 660V \\
+        Botões comuns (2)       & LA39J-11B         & Sinal         & 600Vac                & 10A limite \\
+        Chave geral	            &                   & Sinal         & 220V                  & 16A \\
+        Sensores Opticos (3)    & PHCT203           & Sinal         & 30V e 6V              & 60mA e 70mA \\
+        Soquete dos Reles       & PRT8M-1           & Suporte       & 12V a 24V             & 6A \\
+        \bottomrule
+    \end{tabular}
+    \caption{Componentes Elétricos}
+    \label{tab:comp-elet}
+\end{table}
 
-\subsection{Metodologia}
-    Para obtermos a equação que rege o controlador, inicialmente foram feitos alguns modelos diferentes para que os resultados pudessem ser analisados. Assim, como de costume ao se projetar um controlador da família PID, começamos calculando e testando um controlador do tipo Proporcional e, em seguida, um controlador do tipo Proporcional-Integrador.
-    
-    Em cada caso, foi manipulada a equação \ref{eq:planta} de forma a incluir a ação do controlador em questão, inserindo os ganhos relevantes.
-\subsubsection{Controlador P}
-Tomando o controlador:
-\begin{equation}
-C(s) = K_p
-\end{equation}
-
-Em malha aberta:
-\begin{equation}
-    G_pa(s) = \frac{K_p \cdot 0.219}{23.7 \cdot s + 1}
-     \label{eq:planta-com-p}
-\end{equation}
-
-Em malha fechada:
-
-\begin{equation}
- G_p(s) = \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)}
-\end{equation}
-
-    Foi calculado um controlador Proporcional de forma a atender o requisito inicial de $E_{reg}$ de 10\%, utilizando a equação do próprio Erro de Regime:
-    
-    \begin{equation}
-     E_{reg} = \lim_{s \to 0} s \cdot \left( U(s) - U(s) \cdot G_p(s) \right)
-    \label{eq:e-reg}
-    \end{equation}
-    Sendo o sinal de entrada U(s) um sinal degrau, teremos:
-    \begin{equation} \begin{split}
-        E_{reg} = \lim_{s \to 0} s \cdot \left( \frac{1}{s} - \frac{1}{s} \cdot \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)} \right) \\
-        E_{reg} = 1 -\frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
-        E_{reg} = 0.1 = 1 -\frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
-        0.9 = \frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
-        0.9 + K_p \cdot 0.9 \cdot 0.219 = K_p \cdot 0.219 \\
-        0.9 = K_p \cdot  (0.219 - 0.9 \cdot 0.219) \\ 
-        K_p = \frac{0.9}{0.1 \cdot 0.219} = 41.0959 \\
-    \end{split} \label{eq:calc-e-reg} \end{equation}
-        % E_{reg} = \lim_{s \to 0} \left( 1 - \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)} \right)\\
-        % - 0.495 = \frac{0.1 - 0.9 \cdot 0.219 \cdot K_p}{1 + K_p\cdot 0.219} \\
-        % - 0.495 \cdot (1 + K_p\cdot 0.219) = 0.1 - 0.9 \cdot 0.219 \cdot K_p \\
-        % - 0.108405 \cdot K_p + 0.9 \cdot 0.219 \cdot K_p = 0.595 \\
-        % K_p = \frac{0.595}{0.9 \cdot 0.219 - 0.108405} = 6.70838266\\
-    
-\subsubsection{Controlador PI}
- já em malha fechada
-\begin{equation}
-     G_p(s) = \frac{ ( K_p \cdot s + K_i) \cdot 0.219 }{23.7 \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219}
-     \label{eq:planta-com-pi}
-\end{equation}
-
-    %Os ganhos foram calculados de forma a atender um sobressinal de 5\%, o que leva a 
-    %$\xi = 0.69$.
-    % Considerando a equação de $G(s)$ normalizada:
-    % \begin{equation}
-    %     G(s) = \frac{(K_p \cdot 0.219}{23.7 \cdot s + 1} \\
-    % \end{equation}
-    
-    Comparando a equação de $G_p$ com a sua forma canônica, tendo como objetivo um sobressinal de 5\%, erro nulo e tempo de acomodação de 30s, ou seja $\xi = 0.69$ ($S_0 = 0.05$) e estimando $t_a = 30s$, temos que:
-    \begin{equation} \begin{split}
-        %\frac{1}
-        s^2 + s \cdot 2 \cdot \xi \cdot \omega_n + \omega_n^2  \text{, e   } %\frac{K_p \cdot s + K_i} 
-        23.7 \cdot s^2 + (1 + K_p \cdot 0,219) \cdot s + K_i \\
-        t_a = \frac{4}{0.69 \cdot \omega_n} \\
-        \omega_n = \frac{4}{0.69 \cdot t} \\
-        \omega_n = 0.1159 \frac{rad}{s} \\
-    \end{split} \end{equation}
-    Encontrando $K_i$ : 
-    \begin{equation} \begin{split}
-        \frac{K_i \cdot 0.219}{23.7} = \omega_n^2 \\
-        K_i = \omega_n^2 \cdot \left( \frac{23.7}{0.219} \right) = 1.453
-    \end{split} \end{equation}
-        Encontrando $K_p$ :
-    \begin{equation} \begin{split}
-        \frac{1 + K_p \cdot 0.219}{23.7} =  \omega_n \cdot \xi \\
-        K_p =  \frac{23.7 \cdot 2 \cdot \omega_n \cdot \xi - 1}{0.219} = 12.7426 
-    \end{split} \end{equation}
-
-\subsubsection{Controlador PID}
- já em malha fechada
-\begin{equation}
-     G_p(s) = \frac{ (K_d \cdot s^2 + K_p \cdot s + K_i) \cdot 0.219 }{(23.7 + 0.219 \cdot K_d) \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219}
-     \label{eq:planta-com-pi}
-\end{equation}
-
-    %Os ganhos foram calculados de forma a atender um sobressinal de 5\%, o que leva a 
-    %$\xi = 0.69$.
-    % Considerando a equação de $G(s)$ normalizada:
-    % \begin{equation}
-    %     G(s) = \frac{(K_p \cdot 0.219}{23.7 \cdot s + 1} \\
-    % \end{equation}
-    
-    Comparando a equação de $G_p$ com a sua forma canônica, tendo como objetivo um sobressinal de 5\%, erro nulo e tempo de acomodação de 30s, ou seja $\xi = 0.69$ ($S_0 = 0.05$) e estimando $t_a = 30s$, temos que:
-    \begin{equation} \begin{split}
-        %\frac{1}
-        s^2 + s \cdot 2 \cdot \xi \cdot \omega_n + \omega_n^2  \text{, e   } %\frac{K_p \cdot s + K_i} 
-        (23.7 + 0.219 \cdot K_d) \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219 \\
-        t_a = \frac{4}{0.69 \cdot \omega_n} \\
-        \omega_n = \frac{4}{0.69 \cdot t} \\
-        \omega_n = 0.1159 \frac{rad}{s} \\
-    \end{split} \end{equation}
-    Encontrando $K_i$ : 
-    \begin{equation} \begin{split}
-        \frac{K_i \cdot 0.219}{0,219 \cdot k_d + 23.7} = \omega_n^2 \\
-        K_i = \omega_n^2 \cdot \left( \frac{0,219 \cdot k_d + 23.7}{0.219} \right)
-    \end{split} \end{equation}
-        Encontrando $K_p$ :
-    \begin{equation} \begin{split}
-        \frac{1 + K_p \cdot 0.219}{23.7 + K_d \cdot 0.219} = 2 \cdot \omega_n \cdot \xi \\
-        K_p =  \frac{2 \cdot \xi \cdot \omega \cdot (23.7 + K_d \cdot 0.219) - 0.219}{0.219} \\
-    \end{split} \end{equation}
-    
-Supondo $K_d = 5$ nas equações anteriores, temos $K_i = 1,517$ e $K_p = 13,539$.
-%Apenas em caráter experimental, foram tomados como base os ganhos do controlador PI e, em conjunto de um pequeno $K_d = 0.5$, foi aplicado um controle PID completo para avaliar a resposta obtida.
-\subsubsection{Modelagem Discreta Direta}
-Com o objetivo de prova para o método direto do cálculo dos ganhos no modelo discreto, foi calculado um controlador P para a planta no domínio Z, usando apenas um requisito, de tempo de acomodação ($t_a$) de 40 segundos. Sendo a planta:
-\begin{equation}
-   G(s) = \frac{0.219}{23.7 s + 1} 
-\end{equation}
-
-Começamos encontrando a equação da planta no domínio Z, utilizando a transformada de $\frac{G(s)}{s}$ e o segurador de ordem zero:
-
-\begin{equation} 
-\begin{split}
-    G(z) = (1-z^{-1}) \cdot \mathcal{Z} \left\{ \left. \left( \mathcal{L} \left\{ \frac{G(s)}{s} \right\} \right) \right| _{t=kT} \right\} \\
-    G(z) = (1-z^{-1}) \cdot \mathcal{Z} \left\{ \left. \left( \mathcal{L} \left\{ \frac{0.219}{s(23.7 s + 1)} \right| _{t=kT} \right\} \right)  \right\} \\
-\end{split}
-\end{equation}
-
-Utilizando a identidade:
-\[ \frac{a}{s(s+a)} = \frac{1-e^{-aT} z^{-1}}{(1 - z^{-1})\cdot(1-e^{-at}z^{-1})} \]
-
-\begin{equation} 
-    G(z) = 0.219 \cdot \frac{(1-e^{-\frac{T}{23.7}})z^{-1}}{1-e^{-\frac{T}{23.7}}z^{-1}}
-\end{equation}
-%          c = e^{-\frac{T}{23.7}}
-Multiplicando por $\frac{z}{z}$ para levar a equação a valores positivos nos expoentes de z:
-\begin{equation} 
-    G(z) =  \frac{0.219(1-e^{-\frac{T}{23.7}})} {z-e^{-\frac{T}{23.7}}}
-\end{equation}
-Para o requisito apresentado, teremos os polos em S da seguinte forma: (para tempo de acomodação de 98\%)
-
-\begin{equation}
-\begin{split}
-    t_a=40s \\
-    t_a=\frac{4}{|polo|} \\
-    Polo = 0.1 \\
-    S = -0.1 \\
-\end{split}
-\end{equation}
-
-Desse polo em S, transformamos em polo de Z pelo método abaixo, e em seguida montamos a equação do polinômio característico que procuramos: ($T=0.3$)
-\begin{equation}
-\begin{split}
-    Z=e^{sT}=0.97 \\
-    F_d(z)=z-0.97 \\
-\end{split}
-\end{equation}
-Agora, para a equação do controlador em si, assumiremos seu grau como 1, já que o grau da planta também ficou em 1. Assim:
-\begin{equation}
-\begin{split}
-    C(z)=\frac{K(z+c_1)}{(z+c_2)} \\
-    F_t(z)=G(z) \cdot C(z) \\
-    F_t(z)=\frac{K(z+c_1)}{(z+c_2)} \cdot \frac{0.219(1-e^{-\frac{T}{23.7}})} {z-e^{-\frac{T}{23.7}}} \\
-\end{split}
-\end{equation}
-
-Agora, para reduzir a quantidade de variáveis livres, definimos $c_1=e^{-\frac{T}{23.7}}$, obtendo assim a equação para $F_t(z)$, que então usamos para fechar a malha:
-\begin{equation}
-\begin{split}
-    F_t(z)=\frac{0.219K(1-e^{-\frac{T}{23.7}})}{(z+c_2)} \\
-    \frac{Y(z)}{R(z)}=\frac{F_t(z)}{1-F_t(z)} \\
-    \frac{Y(z)}{R(z)}=\frac{0.219K(1-e^{-\frac{T}{23.7}})}{0.219K(1-e^{-\frac{T}{23.7}})+(z+c_2)} \\
-\end{split}
-\end{equation}
-Comparando o divisor da equação com o polinômio característico que encontramos anteriormente, chegamos a uma equação que relaciona K com $c_2$, ambos desconhecidos:
-\begin{equation}
-\begin{split}
-   0.219K(1-e^{-\frac{T}{23.7}})+(z+c_2) = (z-0.97) \\
-   c_2=-0.97-0.002755K \\
-\end{split}
-\end{equation}
-Utilizamos alguns testes para definir os valores de $c_2$ e K e, assim, podermos chegar a equação final para o controlador, e realizar testes com os resultados encontrados aqui.
-\begin{equation}
-\begin{split}
-   C(z)=\frac{K(z-0.98742)}{z+c_2}
-\end{split}
-\end{equation}
-\begin{equation}
-\begin{split}
-     K= 10.95 ; c_2= -1.0002
-\end{split}
-\end{equation}
-A partir disso, combinou-se a equação do controlador (27) com a equação (25) da função transferência e o modelo foi testado no \textit{MatLab}, obtendo a seguinte curva resposta:
-\begin{figure}[H]
-    \centering
-    \caption{Simulação no \textit{Matlab} com controlador discreto}
-    %\includegraphics[width=\textwidth]{img/grafico discreto.png}
-    \begin{tikzpicture}
-    \begin{axis}[xlabel=t (s),
-               xmin = 0, xmax=,
-               ymin = 0, ymax = 1.2,
-               ylabel=Amplitude,
-               font=\small,
-               width = \textwidth,
-               height = 0.5\textwidth ]
-    \addplot table [y=t, x=A, mark=none]{res.dat};
-    \addlegendentry{Resposta com controlador discreto}
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:res-discreto}
-    \end{figure}
-    
-Com a curva, ficou comprovado que o sistema atendeu o requisito de tempo de acomodação, estabilizando 2s antes do estipulado. 
-\subsection{Resultados Obtidos}
-\subsubsection{Controlador P}
-Inserindo o controlador do tipo proporcional no sistema em malha fechada, tomando como expectativa o erro assumido de 1\% e aplicando o ganho calculado $K_p = 99$, obteve-se a seguinte resposta na simulação:
-
-\begin{figure}[H]
-    \centering
-    \caption{Teste P}
-    \begin{tikzpicture}
-    \begin{axis}[
-    xlabel=t (s),
-    xmin=0, xmax=\xPID,
-    ymin=-0.15, ymax=\yPID,
-    font=\small,
-    %ylabel=Nível (m),
-    legend pos=north east,
-    width = 0.95\textwidth,
-    height = 0.7\textwidth]
-    \addplot[brown] table [y=out_valve, x=t, mark=none]{teste-P.csv};
-    \addlegendentry{Sinal de controle}
-    \addplot[red] table [y=level, x=t, mark=none]{teste-P.csv};
-    \addlegendentry{Nível no tanque}
-    \addplot[green] table [y=setpoint, x=t, mark=none]{teste-P.csv};
-    \addlegendentry{Setpoint}
-    \addplot[blue] table [y=error, x=t, mark=none]{teste-P.csv};
-    \addlegendentry{Erro}
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:comp-modelos-P}
-\end{figure}
-
-Como pode-se observar, ao atingir o valor pré-definido, o nível fica oscilando com um erro máximo de 1.8\% e como o controle é apenas proporcional, o sinal de controle oscila excessivamente, entre o seu valor máximo e mínimo. Isto seria altamente danoso à um equipamento real e geraria grande desgaste, o que tornaria este controle impraticável. Uma solução mais adequada neste caso, seria utilizar um controle ON/OFF com histerese. 
-
-%isso porque o sinal de controle é completamente instável e não apresenta perspectiva de estabilização em nenhum momento, sendo essa uma característica esperada em controladores P nesse cenário. Ou seja, apesar do sistema se aproximar do requisito de erro estipulado, ele se torna impraticável.
-
-\subsubsection{Controlador PI}
-Inserindo o controlador do tipo Proporcional-Integrativo no sistema em malha fechada, sabendo que um controlador PI apresenta erro de 0\% e tomando como expectativa um sobressinal assumido de 5\%, aplicando os ganhos calculados $K_p = 12.6455$ e $K_i = 3.4394$ resultou na seguinte resposta de simulação:
-
-\begin{figure}[H]
-    \centering
-    \caption{Teste PI}
-    \begin{tikzpicture}
-    \begin{axis}[xlabel=t (s),
-                 xmin=0, xmax=\xPID,
-                 ymin=-0.15, ymax=\yPID,
-                 ylabel=Valores normalizados,
-                 legend pos=north east,
-                 font=\small,
-                 width = 0.95\textwidth,
-                 height = 0.7\textwidth]
-    \addplot[blue] table [y=error, x=t, mark=none]{teste-PI.csv};
-    \addlegendentry{Erro}
-    \addplot[red] table [y=level, x=t, mark=none]{teste-PI.csv};
-    \addlegendentry{Nível do tanque}
-    \addplot[green] table [y=setpoint, x=t, mark=none]{teste-PI.csv};
-    \addlegendentry{Setpoint}
-    \addplot[brown] table [y=out_valve, x=t, ]{teste-PI.csv};
-    \addlegendentry{Sinal de controle}
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:comp-modelos-PI}
-\end{figure}
-
-Como esperado em um controlador PI, o erro em regime é nulo. Além disso, o sobressinal máximo obtido foi de 1.45\%, ou seja, muito abaixo dos 5\% esperados, fazendo com que o nível no tanque ultrapasse muito pouco o valor desejado antes de estabilizar. Já o tempo de acomodação é de 35s, excedendo o valor estipulado, mas ainda sendo útil em um sistema real.
-    
-\subsubsection{Controlador PID}
-
-\begin{figure}[H]
-    \centering
-    \caption{Teste PID}
-    \begin{tikzpicture}
-    \begin{axis}[xlabel=t (s),
-                 xmin=0, xmax=\xPID,
-                 ymin=-0.15, ymax=\yPID,
-                 %ylabel=Nível (m),
-                 legend pos=north east,
-                 font=\small,
-                 width = 0.95\textwidth,
-                 height = 0.7\textwidth]
-    \addlegendentry{Nível no tanque}
-    \addplot[blue] table [y=error, x=t, mark=none]{teste-PID.csv};
-    \addlegendentry{Setpoint}
-    \addplot[red] table [y=level, x=t, mark=none]{teste-PID.csv};
-    \addlegendentry{Erro}
-    \addplot[green] table [y=setpoint, x=t, mark=none]{teste-PID.csv};
-    \addlegendentry{Sinal de controle}
-    \addplot[brown] table [y=out_valve, x=t, ]{teste-PID.csv};
-    \end{axis}
-    \end{tikzpicture}
-    \label{fig:comp-modelos-PID}
-\end{figure}
-
-    Em caráter experimental, foi feito um teste com $K_d = 5$, utilizando os valores calculados na parte de metodologia. A resposta obtida foi um pouco mais oscilatória, mas sem nenhuma alteração significativa no valor de sobressinal (pelo menos no fundo de escala utilizado). No entanto, considerando o custo de implementação e a natureza do sistema este controlador não aparentou melhorias significativas.
-    %Foram pesquisadas bibliotecas para a linguagem de programação utilizada no software de captura de dados, já tendo em mente a integração com o sistema de controle.
-    %A biblioteca que será utilizada para a implementação inicial será a \href{https://pypi.org/project/simple-pid/}{Simple PID}. Será futuramente avaliada sua performance e precisão para a aplicação e se for necessário é sujeita a troca.
-    %Essa etapa do projeto terá como ponto de partida o modelo matemático escolhido, além das restrições para determinação de um modelo de controle PID.
 \newpage
+\subsection{Mudanças em relação ao projeto inicial}
+Após as listas anteriores terem sido consolidadas, e durante a execução do projeto, surgiram outras mudanças e adaptações que precisaram ser feitas nos componentes. Foram elas:
+\begin{enumerate}
+    \item A fonte de alimentação dos \textit{drivers} anteriormente era de 48V modelo 'SCN-800-48', mas foi substituída por 2 fontes de 42 V, 300 W Akiyama, pois queimou (causa desconhecida);
+    \item Foi substituído o \textit{driver} do eixo 'B' por outro de mesmo modelo, pois o original estava inoperante (sem código de erro, mas nenhuma movimentação nos eixos quando comandado de forma idêntica aos outros, o \textit{driver} funcionava somente no modo \textit{self-test}).
+\end{enumerate}
 
-\section{Integração de Sistemas}
+\section{Projeto Elétrico}
 
-\begin{figure}[H]
-    \centering
-\caption{\textit{Layout} de Comunicação Geral}
-\includegraphics[width=0.8\textwidth]{img/diagrama-geral.png}
-    \label{fig:arq_geral}
-\end{figure}
-
-Ao integrar o supervisório, o controlador e a planta, foram implementados 2 pares cliente-servidor \Mb: um entre o supervisório e o controlador, e outro entre o controlador e a planta; sendo um cliente e um servidor implementados em \Py.
-
-Foram definidos registradores de entrada e saída para ambos os pares, sendo os da planta expostos na figura \ref{fig:conn-modbus} e do supervisório na figura \ref{fig:tags-comm-2}. 
-
-Internamente na implementação em \Py, são utilizadas duas \textit{threads} que se comunicam via filas, representado no diagrama pela letra "\texttt{q}". Isto é feito de modo a desacoplar o tempo de execução dos dois processos. Além disso, essa é a forma recomendada de implementar comunicação e troca de dados segura entre processos sem problemas de concorrência e sincronismo (compartilhar memória é contraindicado e, na linguagem escolhida, praticamente impossível).
-
-Por exemplo: o processo da planta, idealmente, deve rodar em um \textit{loop} de tempo fixo igual ao tempo de amostragem escolhido para o sistema (neste caso $T=0.3$). Integrar os dois componentes mantendo este requisito seria dispendioso e reduziria muito a modularidade do código.
-
-A seguir serão abordadas as alternativas de comunicação testadas ao longo do projeto e, de uma forma mais detalhada, explicada como as partes do sistema interagem ao longo da execução.
-%de registradores, dos quais são usados dois para realizar as operações de leitura e escrita das informações do servidor. O código do servidor assíncrono foi feito em \textit{Python} usando inicialmente a biblioteca \textit{PyModbus}.
-%expando isso?
-%Pode-se ver na figura \ref{fig:arq_geral} uma visão geral da arquitetura e a relação entre os componentes do sistema.
-
-\subsection{Alternativas de \textit{Driver} e Comunicação}
-
-Ao longo desse desenvolvimento, foram testadas diversas soluções para a troca de informações do supervisório com o servidor e outros elementos do sistema, visando uma que fosse funcional, estável e permitisse o envio e recebimento das informações precisas. Dessa forma, as principais alternativas consideradas estão listadas nos tópicos abaixo:
-
+A partir dos componentes definidos anteriormente, o projeto elétrico consiste no painel onde estão alocados e na sua conexão com os atuadores, componentes mecânicos e o operador. O projeto deste painel está dividido em 4 páginas: 
 \begin{itemize}
-    \item OPC/UA: foi utilizado para testes, no entanto não foi explorado pois mostrou-se demasiadamente complexo para a aplicação em questão.
-    \item MQTT: apesar de possuir configuração e utilização bastante simples, o \textit{driver} deste protocolo disponível para \EE não permite, por algum defeito pontual, se conectar à rede quando a interface está operando. %possui um defeito onde conectava com sucesso se ligado manualmente, mas não quando ligado à interface.
-    %F for MQTT ;-;
-    %F -Wolf -ternao
-    %éfi
-    \item \Mb: 
-    \begin{itemize}
-        \item \EE~ - Foram testados dois \textit{drivers} cliente: \textit{Enron} e \textit{Modicon}; somente o \textit{driver} \textit{Modicon} funcionou corretamente, portanto foi o selecionado para utilização na solução final.
-        \item Servidor \Py~ - Foram testadas duas bibliotecas que implementam servidores \Mb: \textit{PyModbus} e \textit{pyModbusTCP}; O driver \textit{PyModbus} foi escolhido por ser mais robusto e estar mais estável, visto que o \textit{PyModbusTCP} ainda está em versão preliminar.
-        \end{itemize}
+\item Alimentação $\longrightarrow{}$ Rede, fontes de alimentação, parte de potência dos drivers, motores e laser;
+\item Sensores $\longrightarrow{}$ sensores e circuitos auxiliares de indicação de falha;
+\item Atuadores $\longrightarrow{}$ parte de sinal e acionamento dos \textit{drivers} e ventiladores;
+\item IHM $\longrightarrow{}$ Placa \LCNC, botões do painel e bobinas dos relés;
 \end{itemize}
 
-\subsection{Detalhamento da Solução Final}
-Depois de definidas as alternativas de desenvolvimento escolhidas anteriormente, foi implementado um servidor usando a biblioteca \textit{PyModbus}. Nesse sistema, para cada evento ou escrita nos registradores, o servidor \Mb{} chama um \textit{callback}, ou processador do evento.
+Antes de apresentar as páginas vale destacar que o circuito de operação dos sensores foi previamente testado em bancada. Já os demais circuitos tem como base o painel inicial da máquina. Para a montagem foi usado o software \textit{QEletroTech}, consultando como fazer nos manuais em \ref{bib:manual-qeletrotech}.
 
-Cada um desses eventos, os quais contêm um código de função, endereço e valor, são colocados em uma fila e mapeados em comandos no processo \texttt{soft\_plc}, por meio de um dicionário onde a chave é o endereço onde ocorreu uma escrita e o valor é o comando associado. Abaixo está detalhado o código em questão.
-
-%função processadora de evento, para o evento de qualquer escrita em registradores \Mb, estes eventos, cada um contendo um código de função, endereço e valor, são colocados em uma fila e mapeado em comandos no processo \texttt{soft\_plc}, por meio de um dicionário onde a chave o \texttt{dict} abaixo
-
-\begin{minted}{python}
-plant_co_map = {
-    self.co.START_BTN.value: plant.Command.START,
-    self.co.STOP_BTN.value:  plant.Command.STOP,
-    self.co.EMERG_BTN.value: plant.Command.EMERGENCY,
-    self.co.AUTO_MODE.value: plant.Command.AUTO_MODE,
-}
-plant_hr_map = {
-    self.hr.IN_VALVE.value:  plant.Command.IN_VALVE,
-    self.hr.OUT_VALVE.value: plant.Command.OUT_VALVE,
-    self.hr.SETPOINT.value:  plant.Command.SETPOINT,
-    self.hr.K_P.value:       plant.Command.SET_K_P,
-    self.hr.K_I.value:       plant.Command.SET_K_I,
-    self.hr.K_D.value:       plant.Command.SET_K_D,
-}
-\end{minted}
-A cada ciclo de execução o processo \texttt{plant} lê valores da planta, via cliente \Mb, calcula o sinal de controle (se o controlador estiver habilitado) e gera resultados por meio de uma fila de saída, no formato especificado abaixo:
-
-\begin{minted}{python}
-res = {
-    self.Output.TIME : 0,
-    self.Output.LEVEL : 0,
-    self.Output.OUTFLOW : 0,
-    self.Output.OUT_VALVE : 0,
-    self.Output.IN_VALVE : 0,
-    self.Output.SETPOINT : 0,
-    self.Output.DT : 0,
-}
-\end{minted}
-Este ciclo é pensado de modo que, na medida do possível, haja um tempo de execução fixo (o principal limitador é o atraso da rede).
-
-%No caso desses resultados comandos a serem enviados pelo controlador, estes são processados. O objeto de resultado têm a forma:
-
-%Quanto ao processo da planta, a cada ciclo são produzidos objetos de resultado por meio de uma fila de saída e, no caso de comandos serem enviados pelo controlador, estes são processados. O objeto de resultado têm a forma:
-
-Também, durante um ciclo, o processo checa se há itens na sua fila de entrada (cada item é um par de comando e valor), sendo que cada função obtida por este mapeamento é chamada com o valor associado. O mapeamento está exposto na seção de código abaixo:
-
-\begin{minted}{python}
-cmd_map = {
-	self.Command.STOP : self.stop ,
-	self.Command.START : self.start ,
-	self.Command.EMERGENCY : self.emergency ,
-	self.Command.AUTO_MODE : self.pid.set_auto_mode ,
-	self.Command.SETPOINT : self.set_setpoint ,
-	self.Command.IN_VALVE : self.set_in_valve ,
-	self.Command.OUT_VALVE : self.set_out_valve ,
-	self.Command.SET_K_P : self.set_kp ,
-	self.Command.SET_K_I : self.set_ki ,
-	self.Command.SET_K_D : self.set_kd ,
-}
-\end{minted}
-
-Já no \texttt{soft\_plc}, os valores lidos da fila de saída de \texttt{plant} são utilizados para atualizar os endereços correspondentes à estes valores no servidor \Mb{}. Como a implementação \Mb{} utiliza somente números inteiros, todos os valores comunicados por meio de \Mb{} (desde a planta) possuem \textit{offset} decimal de 1000. Esta constante é informada ao supervisório por meio de um registrador. 
-
-Sendo assim, os dados estão no formato adequado para serem compreendidos pelo \textit{driver} do supervisório e, consequentemente, pelo usuário.
-%outro
-
-\section{Supervisório}
-\subsection{Estrutura do Supervisório}
-%% O supervisório foi estruturado a partir de 3 classes: Elementos, Botões e Comunicação %%
-Para desenvolvimento da interface para o usuário, foi feito um supervisório no \EE, o qual está estruturado com base em dois tipos de elementos, os atuadores e mostradores, conforme descrito abaixo.
- 
-\begin{itemize}
-\item Atuadores
-\begin{itemize}
-    \item Botão de ligar: inicia o sistema, começando já ativado ao ligar o supervisório;
-    \item Botão de parar: encerra a simulação no programa \factorio;
-    \item Botão de emergência: fecha as válvulas e interrompe os sistemas imediatamente; 
-    \item Carregar: atualiza valores de entrada de Kp, Ki, Kd e nível;
-    \item Atualizar: atualiza a tabela referente; 
-    \item Botões de Modo: alteram o modo de operação do sistema, de automático para manual;
-    \item Abertura das válvulas de entrada e saída: alteram, através de um conjunto de controles deslizantes, a porcentagem de abertura das válvulas de entrada e saída;
-    \item Salvar: atualiza a habilitação dos limites do alarme de nível e também seus respectivos valores;
-    \item \textit{Login}: permite que o usuário realize \textit{login} no sistema;
-    \item Análise gráfica: mostra um gráfico, em janela separada, com o comportamento do sistema ao longo do tempo;
-    \item Configuração do sistema: abre uma janela modal onde se permite configurar parâmetros do sistema;
-    \item Alarmes: abre uma janela modal onde se permite configurar o alarme de nível e também possui uma tabela com o histórico de disparos;
-    \item Histórico de configurações: abre uma janela modal que possui tabelas demonstrando o histórico de alterações de parâmetros e também o histórico de valores do sistema.
-\end{itemize}
-\item Mostradores
-\begin{itemize}
-    \item Sinaleira: 3 luzes indicando o estado do sistema: funcionando, parado ou emergência;
-    \item Nível: apresenta o nível atual de água no tanque, em metros e em \%;
-    \item Fluxo: apresenta a taxa de passagem de fluido, em \%;
-    \item Abertura das válvulas de entrada e de saída: mostra, em \%, o quão aberta está cada válvula;
-    \item Erro: Expõe o erro, em \%, da resposta;
-    \item Risco de nível: apresenta ao usuário a situação do nível do tanque de acordo com os limites do alarme;
-    \item Ganhos: mostram os ganhos, Kp, Ki e Kd, atuais;
-    \item Gráfico: registra o comportamento do sistema ao longo do tempo;
-    \item Nível desejado: apresenta o valor de nível desejado mais recente estabelecido pelo usuário;
-    \item Histórico de alarmes: tabela contendo os últimos alarmes de nível disparados e o usuário que os configurou;
-    \item Histórico de configurações: tabela que armazena todas as alterações realizadas na configuração do sistema e o usuário responsável por elas;
-    \item Histórico de dados da planta: tabela com a finalidade de apresentar um histórico de valores essenciais do sistema, atualizando-os a cada 5 segundos;
-\end{itemize}
-\end{itemize}
-
-Nas próximas seções serão expostos como os elementos estão distribuídos nas telas e como ocorre a comunicação com a planta.
-
-\subsection{Telas da Interface}
-
-O supervisório é composto por cinco telas, onde a primeira é o Painel de Monitoramento. A sua principal função é apresentar a situação atual do sistema, contendo a sinaleira, os mostradores de nível, de fluxo, de erro e do estado das válvulas. Além disso, ela também têm os comandos básicos para iniciar, parar, acessar o gráfico do sistema, o painel de configuração do sistema e o painel de configuração dos alarmes. 
-
-Além disso, possui um mostrador de alarme referente ao nível atual do tanque e seu risco potencial, bem como um botão de emergência, responsável por fechar ambas as válvulas o mais rápido possível.
-
-\begin{figure}[H]
-    \centering
-    \caption{Tela de Monitoramento} \includegraphics[width=0.8\textwidth]{img/ui_geral.png}
-    \label{fig:tel1}
-\end{figure}
-
-A segunda tela, chamada Configuração do Sistema, é somente acessível por usuários autorizados, mediante a \textit{login} e senha. Nela é possível realizar diversas alterações no funcionamento do sistema, sendo elas: alteração de ganhos, nível desejado, modo e abertura das válvulas (caso o sistema esteja em manual). Adicionalmente, possui um botão de emergência, os botões de acesso ao gráfico do sistema e ao histórico de alterações, os mostradores para visualizar o valor atual daquilo que se deseja alterar e uma miniatura do gráfico gerado pelo sistema.
-
-\begin{figure}[H]
-    \centering
-    \caption{Tela de Configuração} \includegraphics[width=0.8\textwidth]{img/ui_config.png}
-    \label{fig:tel2}
-\end{figure}
-
-Na tela de Configuração de Alarmes, também restrita a usuários autorizados, podem ser habilitados ou desabilitados os limites do alarme de nível presente no painel de monitoramento, bem como alterar seus valores. Ela possui também uma tabela conectada a um banco de dados, responsável por registrar todos os disparos do alarme, bem como o momento em que foi disparado e o usuário que o configurou.
-
-\begin{figure}[H]
-    \centering
-    \caption{Tela de Configuração de alarmes} \includegraphics[width=0.8\textwidth]{img/ui_alarm.png}
-    \label{fig:ui_alarm}
-\end{figure}
-
-A quarta tela é referente ao histórico de alterações nas configurações do sistema e o usuário responsável pelas mesmas, além do histórico de valores essenciais do sistema, como os de nível, fluxo e abertura das válvulas de entrada e saída, sendo atualizado a cada 5 segundos. Ambos os históricos são mostrados em tabelas e estão conectados a seus respectivos bancos de dados.
-
-\begin{figure}[H]
-    \centering
-    \caption{Tela de Histórico} \includegraphics[width=0.8\textwidth]{img/ui_hist.png}
-    \label{fig:ui_hist}
-\end{figure}
-
-A quinta e última tela, de Análise Gráfica, contém um gráfico gerado em tempo real pelo sistema em função do tempo, demonstrando as curvas relacionadas ao nível atual, ao nível desejado, ao erro e ao sinal de controle (abertura da válvula de saída).
-
-\begin{figure}[H]
-    \centering
-    \caption{Tela de Análise Gráfica} \includegraphics[width=0.8\textwidth]{img/ui_graph.png}
-    \label{fig:analise_grafica}
-\end{figure}
-
-\subsection{Comunicação}
-%Para a comunicação com o \factorio{} foi instalado um driver \textit{modbus} no ambiente do projeto do supervisório, ele utiliza comunicação TCP/IP e possibilita o envio e recebimento de dados através do protocolo \textit{modbus}.
-%driver+in/out+registradores+servidor
-
-Para realizar a integração entre a simulação operada pelo \factorio e o supervisório designado no \EE, foi utilizado um servidor programado em \Py{} se comunicando pelo protocolo \Mb, como detalhado anteriormente. Para isso foi instalado e configurado o \textit{driver} \Mb escolhido conforme os critérios já apresentados. Na imagem abaixo está detalhado o esquema de entradas e saídas.
+% \includepdf[landscape=true, page=1]{pdf/painel-eletrico} 
+% \includepdf[landscape=true, page=2]{pdf/painel-eletrico}
+% \includepdf[landscape=true, page=3]{pdf/painel-eletrico}
+% \includepdf[landscape=true, page=4]{pdf/painel-eletrico}
 
 \begin{landscape}
 \begin{figure}[H]
     \centering
-\caption{Tags de Comunicação entre o \EE e o servidor \Py{}}
-\includegraphics[width=23cm]{img/tags_driver.png}
-    \label{fig:tags-comm-2}
+    \includegraphics[height=0.95\textwidth]{img/p1 ali.PNG}
+    \caption{Pagina 1 - Alimentação}
+    \label{fig:p1}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=1\textwidth]{img/p2 sens.PNG}
+    \caption{Pagina 2 - Sensores}
+    \label{fig:p2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=1\textwidth]{img/p3 driv.PNG}
+    \caption{Pagina 3 - Atuadores}
+    \label{fig:p3}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=1\textwidth]{img/p4 plac.PNG}
+    \caption{Pagina 4 - IHM}
+    \label{fig:p4}
+\end{figure}
 \end{landscape}
 
 \newpage
 
-\section{Conclusão}
+Dentro do projeto elétrico vale ressaltar, na parte de alimentação (figura \ref{fig:p1}), que para energizar as fontes de 42V e a de 15V, responsáveis pelo acionamento do laser e motor, é preciso chavear a contatora apertando o botão de \textit{start} da máquina. Outro ponto importante do circuito é a ligação em série dos sensores de inicio e fim de curso (na página \ref{fig:p2}), permitindo que, assim que qualquer um deles seja desarmado, seja interrompido o sinal no pino P11 e o \LCNC perceba a que um limite de operação foi violado.
 
-Com o projeto concluído, deve-se retomar tudo aquilo que foi feito, desde o entendimento da situação problema, até a montagem de uma solução para operação.
- 
-O sistema desenvolvido engloba quatro elementos principais: a planta virtual que contém um tanque com sensores de monitoramento e válvulas de entrada e saída; o cliente que simula o controlador de nível da planta; o supervisório para operação do controlador; e o servidor que integra os elementos. Todos as partes se comunicam através do protocolo de rede \Mb, permitindo que cada uma delas opere em uma máquina diferente se for preciso.
+Na parte de acionamento dos \textit{drivers} (figura \ref{fig:p3}) vale destacar que o do eixo B recebe sinais síncronos ao do eixo Z, visto que os dois comandam os motores que movem os fusos reguladores da altura do laser. Além disso, um outro aspecto importante do projeto é o papel do botão de emergência (na página \ref{fig:p2}), quando pressionado ele desenergiza as fontes de 15V e 42V, dessa forma os motores e laser param de funcionar, mas a placa de interface segue ativa para que o operador possa identificar o problema que causou a emergência.
 
-Além desses elementos, foi desenvolvido um modelo matemático da planta a partir dos ensaios realizados, permitindo o cálculo dos controladores. Para a operação desse sistema, foram formulados quatro diferentes funções: controlador P, controlador PI, controlador PID e controlador discreto de 1ª ordem. Dos quais o controlador PI se mostrou mais vantajoso.
+Finalmente, com o esquema elétrico bem definido, tem-se abaixo a disposição física prévia dos componentes na caixa de comandos e o painel após a montagem: 
 
-Dessa forma, esse Projeto Integrador possibilitou uma combinação de modelagem e desenvolvimento matemático, operação da planta e comunicação entre máquinas e com o operador, assim gerando um grande aprendizado prático, mesmo em um projeto feito inteiramente no período de EAD. 
 
-O uso da linguagem em \Py{} aliada aos protocolos de comunicação industrial possibilitou uma solução adaptada ao mercado atual e aprimorável, no entanto resultou em algumas inconsistências e adversidades no processo de troca de informações com a interface do usuário. Assim, em projetos futuros poderia-se utilizar uma interface web para operação e um servidor em nuvem, tornando o sistema ainda mais acessível. 
-%\subsection{Comunicação com o controlador}
-%\subsubsection{Supervisório}
-% \begin{figure}[H]
-%     \centering
-%     \begin{tikzpicture}
-%     \begin{axis}[xlabel=t,
-%                  ylabel=$Y$ ]
-%     \addplot table [y=level, x=t, ]{valve-log.dat};
-%     %\addlegendentry{Esboço de G x T}
-%     \end{axis}
-%     \end{tikzpicture}
-%     \caption{Esboço de Y x t}
-%     \label{fig:esboco}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/PainelFis.png}
+    \caption{Arranjo dos componentes no espaço físico do gabinete}
+    \label{fig:arranjo-painel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/painel-final.jpg}
+    \caption{Painel elétrico montado}
+    \label{fig:painel-final}
+\end{figure}
+
+\section{Projeto Mecânico}
+\label{sec:mecanico}
+No que diz respeito à porção mecânica do projeto, foram levantados itens individuais que deveriam ser trabalhados. Estes estão listados abaixo, junto com suas explicações, as opções de solução, e a solução escolhida e implementada para cada caso.
+\begin{enumerate}
+    \item Rever sensores de fins de curso e \textit{home}:
+    \begin{itemize}
+        \item Os sensores antigos da máquina, tanto de \textit{home} quanto de fim de curso, eram todos mecânicos de chave simples, sem rolete, e estavam posicionados de forma não ideal, causando mais impacto mecânico do que necessário nos suportes e nos próprios sensores;
+        \item As soluções pensadas foram, para os sensores \textit{home}, de substituí-los por sensores sem contato físico no acionamento, podendo ser sensores indutivos, capacitivos, ou ópticos;
+        \item Para os fins de curso, foi pensado num sistema com sensores ainda mecânicos, porém com rolete, e onde fosse alterada a parte do carro que encosta no rolete para que esse contato fosse feito por um plano inclinado, de forma a reduzir o impacto. Além disso, foi também pensado em utilizar os mesmos sensores simples antigos, porém reposicionando-os de forma que o movimento do carro fosse tangencial ao botão do rolete, também reduzindo o impacto;
+        \item Assim, as soluções escolhidas foram: O uso de sensores ópticos para os \textit{home}, por serem sensores menores e mais baratos, além de não serem prejudicados pelo tipo de operação da máquina; E para os fins de curso, foi escolhida a solução que continuava com os mesmos sensores mecânicos antigos reposicionados, também por ser a opção mais barata e simples, sem necessidade de alterações no carro da máquina e sem necessidade de comprar componentes extras;
+        \item Os suportes projetados para os sensores estão ilustrados nas figuras de \ref{fig:fcdir} a \ref{fig:duploy}.
+    \end{itemize}
+    \item Rever motores/\textit{drivers} do eixo Z:
+    \begin{itemize}
+        \item O eixo Z da máquina possuía dois motores, posicionados no topo da máquina, que acionam duas guias lineares de fuso de esferas, os quais movimentam a subida e descida da mesa onde fica preso o laser. Além disso, cada um dos motores era controlado por um \textit{driver} distinto. Assim, o desafio era garantir que ambos os motores sempre funcionassem sincronizadamente, com risco de danificar a mesa do laser caso houvesse assincronia durante o movimento;
+        \item As soluções pensadas foram ligar ambos os motores em um único \textit{driver}, retirar um dos motores e um dos \textit{drivers} e ligar os dois eixos das guias lineares por correia sincronizadora, manter o arranjo e garantir a sincronia através do controle por \textit{software} ou ligando a placa controladora em ambos os \textit{drivers} do eixo Z em paralelo;
+        \item Ambas as ideias, de ligar os motores em um único \textit{driver} e de acionar ambas as guias com um único motor, envolveriam pesquisar e entender melhor os motores e a forma como eles estavam ligados aos \textit{drivers}, de forma a decidir se seria melhor ligá-los em paralelo ou em série, ou descobrir se um único motor teria capacidade de gerar o torque necessário para acionar duas guias; Além de que as duas soluções envolveriam mudanças físicas maiores e adição de novas peças à montagem da máquina;
+        \item Sincronizar os \textit{drivers} apenas conectando os sinais de passo e direção deles em paralelo era a solução mais prática, uma vez que não envolveria nenhuma mudança direta do projeto antigo, especialmente em vista que os usos anteriores da máquina não encontraram problemas nesse quesito, e considerando que os motores são de passo e que é o eixo de menor movimentação, o que reduz muito a chance de assincronia; Assim, esta foi a solução escolhida. 
+    \end{itemize}
+    \item Montagem do painel elétrico na máquina e da fiação entre eles:
+    \begin{itemize}
+        \item A máquina e o gabinete do painel elétrico eram dois objetos grandes e soltos um do outro, o que dificultava muito o transporte do projeto e causava mais necessidade de espaço onde ele fosse montado. Além disso, os cabos entre as duas partes eram excessivamente longos e mal dimensionados;
+        \item Disso, foi percebida a necessidade de modificar de alguma forma a relação física entre o gabinete e a máquina;
+        \item As soluções desejadas eram de transferir o painel para um gabinete menor, fixá-lo em uma das laterais da máquina, e refazer a fiação entre os dois, usando conectores, trilho porta-cabos e protetores de cabo adequados;
+        \item Foi notado que trocar o gabinete por outro menor seria inviável, devido a impossibilidade de reduzir o tamanho total do painel significativamente. Porém, os outros pontos almejados continuaram como objetivos.
+    \end{itemize} 
+    \item Melhorar área de trabalho:
+    \label{subsec:curso}
+    \begin{itemize}
+        \item A área de trabalho da máquina, limitado pelos fins de curso, era, inicialmente, retangular (22cm no eixo X por 17cm no eixo Y) e não aproveitava bem o espaço interno dos perfis de alumínio por ineficiência na montagem das guias do eixo Y. Foi notado também que o motor acionador do eixo X estava excessivamente afastado do eixo da guia, causando precarização da montagem do acoplamento dos eixos, devido ao tamanho não ideal da flange dessa ligação, que causava colisão do motor com a chapa traseira da máquina;
+        \item Para aumentar o curso do eixo Y no sentido para frente da máquina, a solução foi de desparafusar a base das guias nos perfis laterais e trazer a montagem dos eixos em si alguns centímetros para frente, fixando novamente após a mudança;
+        \item Para aumentar o curso do eixo Y no sentido para a traseira da máquina, foram pensadas algumas soluções: usar uma caixa de acoplamento angular para reposicionar o motor a 90º da posição original; usar um jogo de duas rodas dentadas e uma correia sincronizadora para reposicionar o motor a 180º da posição original; ou usinar a flange original de forma a aproximar o motor da guia o máximo possível;
+        \item Como todas as soluções envolviam alterações na flange, e as duas primeiras envolviam adquirir peças novas (e possivelmente não resultariam em ganho suficiente de curso devido ao tamanho de tais peças), foi decidido pela utilização da terceira solução, que manteria o uso dos componentes antigos porém resolveria os problemas de espaço. A situação inicial da flange está mostrada na figura \ref{fig:flange-antiga}
+    \end{itemize}
+    \item Melhorar tampa da máquina:
+    \begin{itemize}
+        \item A carcaça da máquina possui duas tampas: uma no topo, para acessar o laser, e uma na frente, para introduzir ou retirar o objeto a ser usinado. Nenhuma das duas era acionada, e a principal (frontal) tinha dobradiças simples e era fechada manualmente, e mantida fechada por parafusos com porcas do tipo para perfil de alumínio (sem estas travas, a porta cairia pela ação da gravidade);
+        \item Assim, foi visto necessidade de melhorar de alguma forma a maneira com que a porta principal operava. As soluções pensadas foram de trocar a tampa por uma porta de correr que corresse lateralmente ou verticalmente, ou acionar a porta com pistões pneumáticos e uma eletroválvula, ou utilizar pistões à gás não-acionados (do tipo usado em portas de armário de cozinha) para amortecer o movimento e manter a porta fechada;
+        \item Com o objetivo de manter as mudanças ao mínimo, principalmente evitando a necessidade de incluir um sistema de alimentação de ar comprimido para o uso de eletroválvulas e pistões pneumáticos, foi escolhida a solução com pistões à gás não-acionados, que só necessitariam da compra e instalação de dois pistões de amortecimento na porta antiga.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/flange-antiga.jpg}
+    \caption{Montagem antiga da flange de conexão motor-guia}
+    \label{fig:flange-antiga}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/fcdir.png}
+    \caption{Suporte para fim de curso - Lado direito}
+    \label{fig:fcdir}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/fcesq.png}
+    \caption{Suporte para fim de curso - Lado esquerdo}
+    \label{fig:fcesq}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/homex.png}
+    \caption{Suporte para sensor \textit{home} - Eixo X}
+    \label{fig:homex}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/homez.png}
+    \caption{Suporte para sensor \textit{home} - Eixo Z}
+    \label{fig:homez}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/duploy.png}
+    \caption{Suporte para sensor \textit{home} e fim de curso - Eixo Y}
+    \label{fig:duploy}
+\end{figure}
+
+% Mudanças mecânicas por prioridade:
+% Sensores
+% Reposicionar motor do eixo X - abandonado, substituído pelos 2 seguintes
+% Ajustar acoplamento do eixo X
+% Trazer o Y inteiro para frente
+% Amortecer/acionar a tampa da frente
+
+% Vamos reutilizar os sensores pequenos, só tem que mudar a posição de contato deles com o carrinho
+% Disso, tem que bolar soluções para a fixação de cada sensor
+% Do eixo Z, acabamos decidindo arranjar outro perfil de alumínio e fixá-lo com cantoneiras no perfil médio externo e com um parafuso na parede lateral direita da máquina, no meio da direção y
+% No conceitual devemos registrar as outras possibilidades pensadas - oblongo antigo, oblongo grande preso no perfil superior, uma possível outra peça com sensores de rolete, um perfil novo na parte traseira do perfil interno do plano médio (porém ficaria com folga pelo perfil ser curto), e a solução escolhida (acima)
+
+% P/ arrumar o curso do Y, trouxemos a base toda pra frente:
+% o motor continua batendo no fundo mas agora temos mais curso sobrando pra frente, então vamos
+
+\section{Configuração de \textit{Software}}
+
+Da parte de software, o principal componente utilizado foi o sistema operacional \LCNC, na  plataforma \texttt{x86\_64} (PC), que controla/comanda a máquina por meio de uma interface tipo porta paralela.
+
+Sua configuração é composta principalmente por parâmetros que descrevem os eixos da máquina e suas interfaces, como:
+\begin{itemize}
+    \item Dimensões dos eixos e/ou volume de trabalho, velocidade máxima de trabalho, dimensão do passo;
+    \item Configuração dos eixos (cartesianos, rotativos, delta, etc);
+    \item Configuração dos pinos de comunicação.
+\end{itemize}
+
+\subsection{Configurações de Entradas e Saídas}
+
+A principal forma que o \LCNC~ envia e recebe sinais da máquina é através de uma ou mais portas paralelas. A porta paralela possui diversas configurações padrão, que atribuem funções aos pinos, como na tabela \ref{tab:config-porta-paralela}, que mostra as configurações possíveis para entradas e saídas nos pinos desta interface.
+
+\begin{minipage}{0.49\textwidth}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l||c|c|c|c}
+        \toprule
+        \multirow{2}*{Grupo}    & \multirow{2}*{Pino}   & \multicolumn{3}{c}{\textit{Layout}} \\
+                                &                       & out   & in    & x    \\
+        \midrule
+        Controle                & 1                     & out   & out   & in   \\
+        \multirow{8}*{\textit{Data}}     & 2                     & out   & in    & out  \\
+                                & 3                     & out   & in    & out  \\
+                                & 4                     & out   & in    & out  \\
+                                & 5                     & out   & in    & out  \\
+                                & 6                     & out   & in    & out  \\
+                                & 7                     & out   & in    & out  \\
+                                & 8                     & out   & in    & out  \\
+                                & 9     & out   & in    & out  \\
+        \multirow{4}*{\textit{Status}}   & 10    & in    & in    & in   \\
+                                & 11    & in    & in    & in   \\
+                                & 12    & in    & in    & in   \\
+                                & 13    & In    & in    & in   \\
+        \textit{Control}                 & 14    & out   & in    & in   \\
+        \textit{Status}                  & 15    & in    & in    & in   \\
+        \multirow{2}*{\textit{Control}}  & 16    & out   & out   & in  \\
+                                & 17    & out   & out   & in   \\
+        
+    \end{tabular}
+    \caption{Configurações porta serial}
+    \label{tab:config-porta-paralela}
+\end{table}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.49\textwidth}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/parport.png}
+    \caption{Configurações porta serial, fonte: \ref{bib:material-claudio}}
+    \label{fig:porta-serial}
+\end{figure}
+\end{minipage}
+
+Após avaliada a demanda por sinais de entrada e saída, a configuração final obtida foi:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|c|c|l}
+        \toprule
+        Nome Pino   & E/S & Porta da placa & Observação \\
+        \midrule
+        Botão \textit{Start} & in & 1    & \textit{Cycle start} \\
+        Passo X      & out & 2   & \\
+        Direção X    & out & 3   & \\
+        Passo Y      & out & 4   & \\
+        Direção Y    & out & 5   & \\
+        Passo Z      & out & 6   & \\
+        Direção Z    & out & 7   & \\
+        Laser        & out & 8   & \\ 
+        \textit{Enable}      & out & 9   & Configurado como ESTOP OUT invertido \\
+        ESTOP       & in  & 10  & Botão, Invertido \\
+        Intertravamento & in & 11 & or de todos as formas de erro, \LCNC: all-limits  \\
+        \textit{Home} X & in & 12 & Ótico   \\ 
+        \textit{Home} Y & in & 13 & Ótico   \\ 
+        \textit{Home} Z & in & 14 & Ótico   \\ 
+        \textit{Fault} & in  & 15 & 'Ou' com estop \\
+        \bottomrule 
+    \end{tabular}
+    \caption{Pinos de entrada e saída }
+    \label{tab:uso-io}
+\end{table}
 
 \newpage
-\section*{Anexos}
-Os arquivos anexos estão em uma pasta junto ao arquivo do relatório pdf. Organizados conforme a estrutura abaixo:
-\begin{enumerate}[label={Anexo \Roman*:}]
-    \item Código para comparação dos modelos - script \texttt{analysis/data-analisys.m}.
-    \item Dados da resposta step - arquivo \texttt{analysis/step\_test.csv}.
-    \item Programa em \textit{python} para testes da planta e controle simples (testes sem interface) - arquivo \texttt{model/PID.py}.
-    \item Planilha contendo dados dos ensaios dos controladores - arquivo \texttt{analysis/Dados dos ensaios dos controladores.ods}.
-    \item Simulação da planta - Arquivo de projeto \factorio{}: \texttt{factoryio/Control.io}
-    \item Código do supervisório no \EE{} e arquivos associados - pasta \texttt{Supervisorio/}.
-    \item Código de controle da planta integração com a interface em \Py{} - pasta \texttt{final/}.
-    \item Testes de servidores para comunicação com a interface - pasta \texttt{tests/}.
-    %\item Apresentações do projeto (pdf dos slides)
+\subsection{Configuração da HAL}
+
+A Configuração das entradas e saídas da máquina foi feita principalmente por meio da ferramenta \texttt{stepconf}, incluída com o ambiente do \LCNC, como na figura \ref{fig:stepconf}.
+
+\begin{figure}[H]
+
+    \centering
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{img/stepconf_start.png}
+        \caption{Tela Inicial do \stepconf}
+        \label{fig:stepconf-start}
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{img/stepconf_base_info.png}
+        \caption{Tela das configurações base da máquina}
+        \label{fig:stepconf-base-config}
+    \end{subfigure}%
+
+    \vspace{1cm}
+ 
+    \begin{subfigure}[b]{0.50\textwidth}
+        \includegraphics[width=0.9\textwidth]{img/stepconf_parport.png}
+        \caption{Tela das configurações da porta paralela}
+        \label{fig:stepconf-parport-config}
+    \end{subfigure}%
+    \begin{subfigure}[b]{0.50\textwidth}
+        \includegraphics[width=0.9\textwidth]{img/stepconf_xaxis.png}
+        \caption{Tela da configuração de um eixo}
+        \label{fig:stepconf-axis-config}
+    \end{subfigure}
+    \caption{Principais telas do \stepconf}
+    \label{fig:stepconf}
+    
+\end{figure}
+
+A principal alteração feita foi que, como a contagem de entradas e saídas necessárias para esta aplicação somente era compatível com o layout '\texttt{X}', que não é exposto para uso através da interface gráfica, foi inicialmente gerado a configuração base e depois feito a edição manual dos arquivos HAL para alterar a configuração da porta serial, dos pinos e além disso configurar para que a entrada do sinal de \textit{fault} dos \textit{drivers} esteja conectada em 'ou' com o sinal ESTOP.
+
+No Início do arquivo foi alterado a linha:
+\begin{minted}{bash}
+#loadrt hal_parport cfg="0 out"
+loadrt hal_parport cfg="0 X"
+\end{minted}
+
+De modo a alterar a porta serial para o modo 'X'. Para inserir a porta OU citada anteriormente:
+
+\label{code:pins}
+\begin{minted}{bash}
+################
+# manually added
+loadrt or2 count=1
+addf or2.0 servo-thread
+
+# or all the errors into estop
+#                ____
+# fault     ----|    |
+#               | OR |--- estop
+# estop-btn ----|____|
+#
+net estop-btn or2.0.in0 <= parport.0.pin-10-in
+net fault     or2.0.in1 <= parport.0.pin-15-in
+net estop-ext <= or2.0.out
+##############
+\end{minted}
+
+Foi colocado este segmento de código logo ao fim da configuração dos pinos.
+
+A interface escolhida foi a AXIS, mostrada na figura \ref{fig:linuxcnc-axis}.
+
+\subsection{Layout da Máquina}
+Como a máquina possui 3 eixos, foi selecionado uma configuração de 3 eixos, mas na realidade, é mais próximo de uma máquina 2.5 D, que somente opera em planos pré-definidos, pois após ajustado a altura em Z de trabalho, o resto da operação é somente em XY.
+
+\subsection{Alternativas Consideradas}
+
+Também foi considerado o uso do \textit{machinekit} (\textit{fork} do \LCNC) através de uma placa \textit{BeagleBone Black} [\ref{bib:beaglebone}], pois seria possível inserir a placa dentro do painel elétrico da máquina. Devido à falta de suporte oficial e limitações do hardware da \textit{BeagleBone}, foi decidido que não seria viável. A justificativa principal seria que ela possui somente uma CPU de um único núcleo e apenas 1GB de RAM, o que teriam performance insuficiente para uso da interface gráfica em conjunto dos componentes de tempo real do sistema de modo satisfatório.
+
+\section{Implementação Física} 
+\subsection{Fixação de Componentes}
+A montagem do novo painel elétrico, conforme o esquema desenvolvido, foi feita visando utilizar ao máximo os furos antigos, apenas abrindo roscas neles (para poder parar de utilizar porcas com os parafusos, facilitando eventual manutenções e trocas de componente) e eventualmente criando novos furos. Poucos dos conjuntos furo/parafuso são de tamanho M3, alguns são de tamanho M5, e a maioria é de tamanho M4.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/painel-pelado.jpg}
+    \caption{{Painel com componentes removidos}}
+    \label{fig:painel-pelado}
+\end{figure}
+
+Já dos componentes no interior da máquina, os que foram alterados foram os sensores, como explicado na sessão \ref{sec:mecanico}. A impressão 3D das peças de suporte para os sensores foi feita nos laboratórios do IFSC com auxílio do professor Aurélio, e a fabricação dos contato de \textit{home} foi realizada pelos alunos da equipe, com  materiais e equipamentos do laboratório de fabricação mecânica da instituição.
+
+Um componente do painel totalmente novo, a fabricação da placa de circuito auxiliar para integração dos sensores foi feita pelos alunos, com materiais do Laboratório de Projeto Integrador, figura \ref{fig:placa-sensores}, e seria fixada no painel de forma similar à placa de integração de \LCNC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/placa-sensores.jpg}
+    \caption{Placa construída para conexão dos sensores}
+    \label{fig:placa-sensores}
+\end{figure}
+
+\subsection{Testes de Componentes}
+Os primeiros testes realizados foram de validação de componentes individuais, como as fontes, as ventoinhas e a contatora. Após montagem parcial do painel, foram feitos testes minimalistas dos \textit{drivers}, utilizando as fontes e um Arduino UNO (com um programa simples de controle de passo e direção) para acionar os motores.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/teste.jpg}
+    \caption{Processo de teste dos \textit{drivers}}
+    \label{fig:teste}
+\end{figure}
+
+Durante essa etapa, ocorreu a queima da fonte original de 48V, a sua substituição por duas fontes de 42V, foi notado que um dos \textit{drivers} estava com defeito, e foi feita sua substituição por outro de mesmo modelo.
+
+Posteriormente, foi realizado um teste de validação do cabeamento e ligações para os sensores de \textit{home}, ligando um deles diretamente na placa controladora. Figuras de \ref{fig:sensor-montado} a \ref{fig:teste-home}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/sensor-montado.jpg}
+    \caption{Montagem do sensor óptico fora da máquina}
+    \label{fig:sensor-montado}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/sensor-montado-2.jpg}
+    \caption{Montagem do sensor óptico no eixo X}
+    \label{fig:sensor-montado-2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/teste-home.jpg}
+    \caption{Processo de teste do sensor óptico}
+    \label{fig:teste-home}
+\end{figure}
+
+%\subsection{\T Processos de calibragem}
+
+%Foram elaborados todos o materiais auxiliares para o \textit{retrofit} do projeto, pesquisa, testes de componentes e planejamento.
+
+\section{Manual de Operação}
+
+Essa parte terá instruções do procedimento para ligar e controlar a máquina, com imagens dela montada e também orientações do sistema de segurança.
+
+\subsection{Preparação da Maquina}
+
+Antes de ligar a máquina é preciso checar se todos os motores e a alimentação do laser estão conectados ao painel, além de verificar se a mesa está posicionada dentro dos limites do fim de curso, caso não esteja é preciso ajustar manualmente. 
+
+Com tudo organizado, segue-se para a etapa de conexão da máquina com a rede de energia, para isso basta ligar o plugue na lateral da máquina a uma rede monofásica de 220V, além de conectar a entrada USB no computador com o sistema operacional \LCNC ao lado da máquina. %retirar essa parte caso tenha fonte de 5v
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/conec drivers.png}
+    \caption{Ligação dos motores nos \textit{drivers}}
+    \label{fig:conecdrimot}
+\end{figure}
+
+\subsection{Ligar Sistema}
+
+Para energizar a máquina é preciso trocar a posição da chave geral para ligado e rotacionar e liberar o botão de emergência, caso esteja pressionado. Com isso a maquina já terá energizado o circuito auxiliar dos sensores.
+
+Em seguida, é momento de ligar o computador com o sistema operacional \LCNC e, só então, apertar o botão de ligar da máquina, que é o botão verde da botoeira. Ao apertar esse botão os \textit{drivers} são ligados, deixando os motores de passo prontos para operação, além disso o laser é alimentado e fica apenas aguardando um comando do sistema operacional para realizar a usinagem a laser. 
+
+Com o acionamento realizado, será preciso direcionar esforços para o processo de configuração da usinagem dentro do \LCNC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/botoeira.jpg}
+    \caption{Botoeira da máquina}
+    \label{fig:botoeira}
+\end{figure}
+ 
+\subsection{Iniciar \LCNC}
+
+Para acessar o sistema de comando da máquina, baseado em \LCNC, é necessário:
+\begin{itemize}
+    \item Ligar computador e entrar com usuário e senha definidos durante instalação (atualmente '\texttt{parvus}', '\texttt{parvus}').
+    \item Clicar o ícone do sistema, chamado de \texttt{magnus-laser} que está àrea de trabalho, isto irá abrir a interface do sistema.
+    \item Se estiver acionado, desligar botão de emergência \includegraphics[height=0.3cm]{img/tool_estop.png}
+    \item Ligar a máquina
+    \includegraphics[height=0.3cm]{img/tool_power.png}
+    \item Agora a máquina está pronta para operação
+\end{itemize}
+
+\subsection{Movimentar máquina}
+
+Com a máquina ligada dentro do software é possível realizar a movimentação dos eixos e definir caminhos a percorrer. Para realizar essa movimentação basta usar o menu superior esquerdo para selecionar o eixo e clicar nos botões abaixo dele para movimentar no sentido que for preciso. Na parte inferior é possível regular os principais parâmetros do processo, como velocidade.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/axis.png}
+    \caption{Interface AXIS}
+    \label{fig:linuxcnc-axis}
+\end{figure}
+
+\subsection{Situações de Emergência}
+
+Caso ocorra algum erro como violação de fim de curso ou sobreaquecimento do material gravado, pode ser preciso uma parada imediada da máquina. Nesse caso, basta apertar o botão de emergência localizado na botoeira vista na figura \ref{fig:botoeira} (botão cogumelo a direita na figura), assim os motores e laser pararão de funcionar.
+
+No caso de uma violação dos fins de curso, pode-se também pressionar, e manter pressionado, o botão de \textit{by pass}. Esse botão cancelará o sinal de que o fim de curso foi violado e desligará o laser, assim o operador pode mover a maquina para uma posição dentro do campo de uso.
+
+\section{Resultados Atingidos no Projeto}
+Ao longo do desenvolvimento do projeto, ocorreram diversas pequenas atualizações na lista de objetivos, com alguns sendo modificados, outros adicionados, e alguns deixados de lado por impossibilidade de serem concluídos em tempo hábil dados os prazos estabelecidos, dificuldades enfrentadas por problemas de documentação na máquina recebida, redução do semestre e, em alguns momentos, impossibilidade de trabalho em conjunto devido as restrições impostas pela pandemia. Senso assim, nas sub-sessões abaixo estão listados os objetivos que foram realizados com sucesso, e os que não puderam ser concluídos.
+
+\subsection{Objetivos Realizados}
+% registrar tudo o que foi realizado conforme o previsto e os principais objetivos atingidos, mostrando que foi feito bastante coisa.
+
+Dos pontos e objetivos que foram finalizados, tentou-se detalhar todos nos parágrafos abaixo. Porém é importante destacar que eventualmente, algum detalhe menor, ou que faz parte de outro item, pode não ter sido registrado diretamente aqui.
+
+Os suportes para os sensores, projetados pela equipe como idealizado na sessão \ref{sec:mecanico} e impressos em 3D, estão mostrados na figura \ref{fig:suportes-sensores}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/suportes-sensores.jpg}
+    \caption{Suportes para os sensores, impressos}
+    \label{fig:suportes-sensores}
+\end{figure}
+
+Das mudanças mecânicas na máquina, as alterações na flange do motor do eixo X, que foi encurtada para resultar no ganho de curso desejado descrito no item \ref{subsec:curso} da sessão \ref{sec:mecanico} do projeto, estão evidenciadas na diferença entre as figuras \ref{fig:flange-antiga} e \ref{fig:flange-2}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/flange-nova.jpg}
+    \caption{Estado atual da flange do motor do eixo X}
+    \label{fig:flange-2}
+\end{figure}
+
+Com relação aos sensores, destaca-se a aquisição e testagem dos sensores ópticos, além de terem sido feitas as fiações pertinentes. Junto a eles, também foram concluídas as chapas de alumínio fixadas no carro móvel da máquina, de forma a servirem como contato para acionar os sensores de \textit{home}, que foram usinadas de forma a serem presas com parafusos. Os conjuntos sensor/chapa dos eixos X e Y em movimento estão mostradas nas figuras \ref{fig:chapa-sensor-1} e \ref{fig:chapa-sensor-2}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/chapa-sensor-1.png}
+    \caption{Montagem da chapa com o sensor óptico, eixo X}
+    \label{fig:chapa-sensor-1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/chapa-sensor-2.png}
+    \caption{Montagem da chapa com o sensor óptico, eixo Y}
+    \label{fig:chapa-sensor-2}
+\end{figure}
+
+Além dos pontos já destacados, uma das entregas mais importantes foi a redefinição e remontagem do painel elétrico. Esse desenvolvimento possibilitou ter um projeto bem registrado e que prevê diversos itens de segurança, como disjuntor, parada de emergência, chave geral e função de \textit{by pass}. Outro aspecto positivo do novo projeto foi a redução do número de componentes utilizados, sem contar que a nova montagem deixou o painel organizado e mais fácil de realizar manutenção futuramente, como observado na figura \ref{fig:painel-final}.
+
+Voltando ao esquemático, ele inclui alguns componentes além dos que estão em funcionamento, como os sensores de fim de curso. Isso pode facilitar implementações futuras.
+
+Um dos resultados mais importantes atingidos foi a configuração de \textit{software} do \LCNC, que teve como principal objetivo substituir o \textit{software} Mach3, pois depende de licença e é proprietário, o que é contraproducente em um ambiente de ensino por demandar um gasto adicional e ser de funcionamento opaco. Além disso, ele somente opera em plataforma Windows, dificultando a utilização de vários computadores mais antigos que são perfeitamente viáveis no \LCNC. Em contrapartida o \LCNC é muito mais configurável e flexível para o usário, permitindo customização completa de todos os seus elementos.
+
+Outro aspecto relevante da implantação do \LCNC  é que ele já está configurado para as especificações e dimensões da máquina, sem contar que prevê os componentes de sensoreamento, que fisicamente ainda não estão conectados.
+
+
+\subsection{Pontos de Melhoria Restantes}
+%relatar todos os pontos de melhoria que estipulamos como relevantes, mas não conseguimos implementar. %Destacar o que for feito, mesmo que parcialmente em cada coisa não implementada, comentando também as %dificuldades e obstáculos de impediram a implementação.
+%- Atuador/amortecedor na porta da máquina
+%- Sinalização diferente dependendo do erro que estivesse ocorrendo, para clareza do operador
+%- Disjuntor geral
+%- Fixação do painel na lateral da máquina
+%- Alterar local por onde saem os cabos da máquina para irem até o painel
+
+À medida que o projeto avançava e o tempo disponível acabava, foram sendo percebidas algumas melhorias e outros pontos do planejamento inicial que não poderiam ser implementados para a entrega final. Estes itens foram abandonados pela equipe de forma a poder utilizar o tempo restante nas demais questões do projeto, de forma a chegar no melhor produto final possível dadas as circunstâncias, e estão detalhados à seguir:
+\begin{enumerate}
+    \item Finalizar a implementação dos sensores:
+    \begin{itemize}
+        \item Os sensores ópticos, para \textit{home}, foram adquiridos, testados, soldados nos fios devidos e fixados nos suportes respectivos, porém como a placa de intermédio entre os sensores e a placa controladora não pôde ser concluída, os sensores ficaram com sua fiação solta dentro da máquina, sem serem levados até o painel. Já os sensores de fim de curso, a maioria está com a fiação pronta, porém continuam com o problema similar de não estarem implementados em conjunto com a placa controladora;
+        \item Assim, como ponto de melhoria futura, seria o de repensar a forma de interface entre os sensores e a placa controladora, talvez refazendo a placa em questão por completo e utilizando conectores que facilitem a manutenção dos sensores posteriormente.
+    \end{itemize}
+    \item Implementar atuadores, ou pelo menos amortecedores de movimento, na porta principal da máquina:
+    \begin{itemize}
+        \item Atuar a porta poderia ser um passo para automatizar todo o processo de fabricação com a máquina, permitindo integração com um braço robótico que introduziria e retiraria as peças usinadas. Na falta disso, por ser muito complexo para o escopo, o objetivo era de apenas instalar pistões à gás para amortecer a abertura e fechamento da porta, além de impedir que ela abrisse 180º e ficasse caída, e também impossibilitar o desmonte da mesma;
+        \item A opção inicial de atuar a porta já não estava listada como objetivo, apenas o amortecimento. Este, porém, foi abandonado após a compra dos pistões, por perceber que a instalação seria mais complexa do que se imaginava inicialmente;
+        \item As alterações implementadas na porta foram a adição de um sensor de porta fechada (na porta frontal e na porta de topo), de forma que a máquina parasse caso fosse aberta, e uma pequena mudança nos trincos da porta para facilitar o travamento dela, na forma da colagem das porcas de perfil nos parafusos dos trincos.
+    \end{itemize}
+    \item Adicionar sinaleiras ou outro método de indicação que avisasse erros ao operador, e pudesse diferenciar os tipos de erro:
+    \begin{itemize}
+        \item Algum método de sinalização externa que serviria para indicar ao operador qual erro está ocorrendo, de forma a facilitar a correção dos erros durante a operação. Erros como porta aberta, \textit{drivers} em \textit{fault}, fim de curso acionado ou botão de emergência pressionado possuem, cada um, uma forma diferente de correção;
+        \item A mudança não foi implementada pois não foram adquiridos os componentes para tal, e também por falta de tempo;
+        \item Para facilitação, o sinal de porta aberta está ligado junto com o sinal de fim de curso atingido, então não há diferenciação na sinalização entre eles na interface do \LCNC, porém já os diferencia do sinal de \textit{fault} e do sinal de parada de emergência, que estão juntos em outro pino. A placa controladora ainda tinha entradas sobrando que poderiam ser utilizadas para isso, e com mais tempo e com componentes adicionais, poderia ter sido implementado completamente.
+    \end{itemize}
+    \item Introduzir no painel elétrico um disjuntor de proteção geral:
+    \begin{itemize}
+        \item Seria uma adição pequena, de segurança, para impedir queima de componentes elétricos do painel no caso de um surto de sobrecorrente ou sobretensão;
+        \item Não foi implementado pois acabou não sendo adquirido o componente e foi deixado de lado em favor de mudanças mais importantes.
+    \end{itemize}
+    \item Fixar o gabinete do painel na lateral da máquina:
+    \begin{itemize}
+        \item Seria uma mudança visada para facilitar o transporte da máquina e reduzir o espaço necessário para utilização da mesma;
+        \item Para fazer isso, seria necessária uma série de novas furações no fundo do gabinete, e talvez também na parte inferior do mesmo, para a fixação na máquina e potencial adição de pés de apoio, para que o peso do gabinete não ficasse apenas sobre parafusos na lateral. Assim, seria um trabalho que necessitaria de uma quantidade maior de tempo. Além disso, esse posicionamento alternativo também traria um problema extra, que faria com que a entrada de ar do gabinete ficasse voltado para a mesa e em proximidade excessiva com ela, exigindo assim que a entrada de ar fosse deslocada para outro local, o que também levaria ainda mais tempo.
+    \end{itemize}
+    \item Alterar o local de saída dos cabos que vão da máquina ao painel:
+    \begin{itemize}
+        \item Relacionado com o item anterior, serviria para o melhor aproveitamento da proximidade maior entre máquina e gabinete, e também para aproveitar e melhorar o buraco de saída na parede superior da máquina;
+        \item Como o item anterior foi abandonado, o item atual tornou-se inviável.
+    \end{itemize}
+    \item Integrar fonte de alimentação da placa controladora: 
+    \begin{itemize}
+        \item A placa controladora atualmente está sendo alimentada por um cabo USB ligado ao computador;
+        \item inicialmente, a equipe foi levada a crer que a placa funcionaria normalmente recebendo alimentação de 24V somente, porém durante os testes foi descoberto que ela também exige a alimentação pela entrada USB;
+        \item Assim, idealmente seria aproveitada a fonte de 5V que estava anteriormente presente no projeto, facilitando o cabeamento do painel, uma vez que o cabo USB é mais complicado de ser utilizado com a porta do painel fechada.
+    \end{itemize}
+    
 \end{enumerate}
+
+
+\section{Conclusão}
+
+Com o projeto concluído, deve-se retomar tudo aquilo que foi feito, desde o entendimento da situação problema, até a remontagem da máquina após o \textit{retrofitting}.
+
+Um dos principais desafios do projeto desenvolvido foi o entendimento da máquina na versão recebida, sendo necessário identificar como estava montada a fiação do painel elétrico e o funcionamento dos eixos, visto que não estava disponível nenhum material prévio a respeito. Somente depois de um pleno entendimento foi possível realizar o \textit{retrofitting}.
+
+Com esse desafio superado, foi possível estipular as melhorias precisas e especificações que a máquina precisaria cumprir para realizar usinagem. Dessa forma foram feitas importantes entregas, como o ajuste no sensoriamento da da movimentação dos eixos e a remontagem do painel elétrico, junto a uma documentação do esquemático.
+
+Outro grande desafio enfrentado foi a implementação do controle da máquina pelo sistema \LCNC, o qual exigiu a troca das placas de interface no painel elétrico e também a configuração do sistema operacional para as dimensões e recursos do equipamento que está sendo comandado.
+
+Dessa forma, tendo em vista as dificuldades já citadas e também as que o momento de pandemia proporcionaram, como redução do semestre, restrição de trabalho temporariamente de alguns membros da equipe por contaminação, foi entendido pelos membros que o projeto permitiu uma evolução consistente no funcionamento da máquina.
+
+Além disso, o presente documento registra todas as especificações, componentes, projeto elétrico, configurações de software e pontos de melhoria futuros. Dessa forma, próximos projetos podem ter seu caminho facilitado para aprimoramento dessa máquina ou desenvolvimento de outras similares.
+
 
 \newpage
 \section{Referências Bibliográficas}
-\begin{itemize}
-\item \href{https://sigaa.ifsc.edu.br/sigaa/portais/discente/discente.jsf#}{Bibliografia externa disponibilizada pelos professores através do Sigaa}
-\item \href{https://sigaa.ifsc.edu.br/}{\textit{Slides} de aula com deduções disponibilizadas pelos professores através do Sigaa}
-\label{ref:pymodbus}
-\item \href{https://github.com/riptideio/pymodbus}{Repositório Oficial Pymodbus} e  \href{https://pymodbus.readthedocs.io/}{Documentação Oficial PyModbus}
-\item \href{https://github.com/sourceperl/pyModbusTCP}{Repositório Oficial pyModusTCP}
-\item \href{https://github.com/m-lundberg/simple-pid}{Repositório Oficial SimplePID} e \href{https://simple-pid.readthedocs.io/en/latest/}{Documentação Oficial simplePID}
+%\newcommand{\url}[1]{\href{#1}{\texttt{#1}}}
 
-\end{itemize}
+\begin{enumerate}
+    %\renewcommand\labelitemi{--}
+    \small
+    \item \label{bib:material-claudio} Material Professor Cládio Abílio da Silveira, Aula "\LCNC: Porta paralela, Motmod e Kins".
+    \item \label{bib:manual-qeletrotech} Manual QEletroTech: \url{https://download.tuxfamily.org/qet/manual_0.7/build/index.html}.
+    \item \label{bib:linuxcnc-doc} Documentação \LCNC, Versão corrente (2022): \url{https://linuxcnc.org/docs/2.8/html/}.
+    \item \label{bib:linuxcnc-axis-doc} Documentação interface AXIS \LCNC: \url{https://linuxcnc.org/docs/html/gui/axis.html}.
+    \item \label{bib:beaglebone} Placa Beagle Bone: \url{https://beagleboard.org/bone}
+    
+\end{enumerate}
 
-% ---
-% Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz
-% ---
-\bookmarksetup{startatroot}% 
-% ---
+%pagina de manual dos drivers, pagina da placa de interface no M1 automação e pagina de documentação do laser
 
-% ----------------------------------------------------------
-% ELEMENTOS PÓS-TEXTUAIS
-% ----------------------------------------------------------
-\postextual
+\newpage
 
-% ----------------------------------------------------------
-% Referências bibliográficas
-% ----------------------------------------------------------
-%\bibliography{abntex2-modelo-references}
-
-% ----------------------------------------------------------
-% Glossário
-% ----------------------------------------------------------
-%
-% Há diversas soluções prontas para glossário em LaTeX. 
-% Consulte o manual do abnTeX2 para obter sugestões.
-%
-%\glossary
-
-% ----------------------------------------------------------
-% Apêndices
-% ----------------------------------------------------------
-
-% ---
-% Inicia os apêndices
-% ---
-%\begin{apendicesenv}
-
-% ----------------------------------------------------------
-%\chapter{Nullam elementum urna vel imperdiet sodales elit ipsum pharetra ligula
-%ac pretium ante justo a nulla curabitur tristique arcu eu metus}
-% ----------------------------------------------------------
-%\lipsum[55-56]
-
-%\end{apendicesenv}
-% ---
-
-% ----------------------------------------------------------
-% Anexos
-% ----------------------------------------------------------
-\cftinserthook{toc}{AAA}
-% ---
-% Inicia os anexos
-% ---
-%\anexos
-%\begin{anexosenv}
-%
-%\newpage
-%\chapter{Casa da qualidade}
-
-
-
-%\begin{sidewaysfigure}[ht]
-%\includegraphics[scale=.8]{casa-da-qualidade}
-%\caption{Casa da Qualidade}
-%\end{sidewaysfigure}
-
-%\end{anexosenv}
-
-% ----------------------------------------------------------
-% Agradecimentos
-% ----------------------------------------------------------
-%\newpage
-%\section*{Agradecimentos}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/qr-code-link-doc.png}
+    \label{fig:qr-code-link-doc}
+    \caption*{Documentação do projeto}
+\end{figure}
 
 \end{document}
+
+% ---
+% EOF
+% ---
+
+
+% Em um cenário industrial, existe a necessidade de desenvolver sistemas de sensoriamento e controle para extração de dados e automação de processos. Um bom exemplo de situação que exige automação é o sistema de controle de nível e fluxo em um reservatório, sendo esse o objeto de trabalho deste projeto.
+
+% Dessa forma, o problema consiste na identificação e validação de um modelo matemático que descreve o comportamento de uma planta composta por:
+% \begin{itemize}
+% \item Recipiente cilíndrico com 3 m de altura de 2 m de diâmetro;
+% \item Válvula de entrada regulável, com vazão máxima de $0.25~\frac{m^3}{s}$;
+% \item Válvula de saída regulável, com vazão máxima de $0.3543~\frac{m^3}{s}$;
+% \item Sensor de nível (altura de coluna d'água);
+% \item Sensor de fluxo (vazão).
+% \end{itemize}
+% Além disso, faz parte do problema permitir que um usuário realize a operação desse sistema em uma intereface de supervisório.
+% \begin{figure}[H]
+%     \centering
+%     \caption{Exemplo de tanque com medição de nível -  \href{https://instrumentos-lince.com.br/aplicacao/tanque-de-vacuo-para-o-sistema-de-esgoto/}{instrumentos lince}} \includegraphics[width=0.6\textwidth]{img/tanque-de-vacuo-para-o-sistema-de-esgoto.png}
+%     \label{fig:tank}
+% \end{figure}
+
+% \newpage
+% \section{Objetivos}
+
+% Para auxiliar no planejamento de etapas do projeto, foram elencados e ordenados os objetivos principais para o projeto do sistema:
+% \begin{itemize}
+%     \item Avaliar a planta, com o objetivo de se familiarizar com o processo;
+%     \item Identificar e listar variáveis relevantes para o controle da planta;
+%     %\item Extrair parâmetros de interesse para a modelagem posterior;
+%     \item Desenvolver um modelo matemático;
+%     %preliminar
+%     que descreva o processo em malha aberta;
+%     \item Testar e validar a conexão do controlador com a planta;
+%     \item Desenvolver um controlador para regular o sistema; 
+%     \item Avaliar a eficiência do controlador através dos ensaios com o sistema;
+%     \item Selecionar o controlador mais adequado para o sistema;
+%     \item Desenvolver uma comunicação entre operador e planta;
+%     \item Desenvolver uma interface para operação do usuário do sistema.
+%     %\item Exportar os dados, obtidos em simulação, para um cliente externo;
+%     %\item Comparar os resultados obtidos nos dois itens anteriores.
+% \end{itemize}
+
+% \newpage
+
+
+% \section{Modelagem do Sistema em Malha Aberta}
+% \subsection{Metodologia}
+% % Programa em \textit{python} que controla a planta de forma a oter dados utilizados de forma a avaliar a sua resposta utilizando alguma ferramenta de análise de dados, para extrair o parâmetros para um modelo do sistema.
+
+% % \begin{center}
+% % \begin{tikzpicture}[auto, node distance=2cm,>=latex']
+% % \node [input, name=input] {};
+% %     \node [sum, right of=input] (sum1) {};
+% %     \node [sum, right of=sum1] (sum2) {};
+% %     \node [block, right of=sum2] (system) {G(s)};
+% %     \node [block, right of=system, node distance= 3cm] (controller) {\equation$\frac{1}{s}$};
+% %     \node [output, right of=controller] (output) {};
+    
+% %     \node [block, below of=system] (feedback2) {$K_1$};
+% %     \node [block, below of=feedback2] (feedback1) {$K_2$};
+    
+% %     \draw [draw,->] (input) -- node {$R(s)$} (sum1);
+% %     \draw [draw,->] (sum1) -- node {} (sum2);
+% %     \draw [draw,->] (sum2) -- node {} (system);
+% %     %\draw [->] (sum1) -- node {$e$} (controller);
+% %     \draw [->] (system) -- node [name=u] {} (controller);
+% %     \draw [->] (controller) -- node [name=y] {$Y(s)$} (output);
+% %     \draw [->] (u) |- (feedback2);
+% %     \draw [->] (feedback2) -| node[pos=0.99] {$-$} node {} (sum2);
+% %     \draw [->] (y) |- (feedback1);
+% %     \draw [->] (feedback1) -| node[pos=0.99] {$-$} node [near end] {$y_m$} (sum1);
+% % \end{tikzpicture}
+% % \end{center}
+
+% \subsubsection{Desenvolvimento da Planta Modelo}
+
+% Para simular o reservatório com as válvulas e sensores descritos na sessão \ref{ssec:intro}, foi utilizado o programa \factorio {} partindo de uma planta exemplo. O modelo em questão é uma planta de tanque atmosférico, controlada por um painel elétrico e com leitores de nível e fluxo.
+ 
+%  %figura planta Factoryio   
+% \begin{figure}[H]
+%     \centering
+%     \caption{Planta de simulação no Software \factorio{}}
+%     \includegraphics[width=0.5\textwidth]{img/factory IO.PNG}
+%     \label{fig:planta-factory-io}
+% \end{figure}
+    
+% Com o modelo carregado, foi realizado um diagrama de blocos para regulagem manual das válvulas e visualização dos valores de fluxo e nível no \textit{Control.io} (figura \ref{fig:control-io}). Apesar de não usado para a extração dos dados, esse programa de controle simples permitiu um estudo inicial da planta, identificando por exemplo que o nível se estabiliza na metade da altura sempre que as duas válvulas estiverem com o mesmo valor.
+
+%  %figura control.io   
+% \begin{figure}[H]
+%     \centering
+%     \caption{Blocos de controle no Software Control.io}
+%     \includegraphics[width=.6\textwidth]{img/control io.PNG}
+%     \label{fig:control-io}
+% \end{figure}
+
+% \subsection{Obtenção de Dados}
+% \label{ssec:obt-dados}
+% De forma a obter dados, foi utilizada uma planta simulada na ferramenta \factorio, expondo seus atuadores por meio de um servidor \textit{Modbus} TCP (\textit{Transmission Control Protocol}). Este servidor foi controlado por um cliente escrito em \textit{python} e teve seus registradores conectados de maneira que pudesse controlar a simulação (fig. \ref{fig:conn-modbus}), os atuadores, e ler os sensores. 
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Diagrama de conexão do servidor Modbus}
+%     \includegraphics[width=\textwidth]{img/neg-factio-modbus-conn.png}
+%     \label{fig:conn-modbus}
+% \end{figure}
+
+% O cliente controla a planta de forma a estabelecer as condições iniciais para e realizar um teste de resposta a uma entrada de tipo \textit{step} unitário no sinal de controle da válvula de entrada à partir do equilíbrio ($h = 5m,~ v_{entrada}=v_{saida}=5.00$).
+
+% Os dados obtidos a partir deste teste foram exportados em formato CSV (\textit{Comma Separated Values}) e carregados no \textit{software} de análise matemática.
+
+% \subsubsection{Avaliação dos Dados}
+
+% Tomando os valores do experimento obtidos em \ref{ssec:obt-dados}, foi desenvolvida uma planilha para servir como banco de dados. Nessa planilha foram realizados os cálculos para obtenção dos modelos que descrevem a função, utilizando \texttt{query()},  fórmulas matemáticas e outras funções. O \textit{Google Sheets} foi a ferramenta adotada pois permite edição simultânea, organização na forma de banco de dados e conservação dos resultados de diversos experimentos. 
+
+% Os modelos matemáticos estudados foram:
+% \label{sec:metodo-modelos}
+% \begin{itemize}
+%     \item Ziegler/Nichols e Hägglund: Apesar de diferentes, ambos os métodos utilizam uma reta tangente traçada sobre o trecho de máxima inclinação, partindo do primeiro ponto de inflexão da curva e indo até o segundo, e portanto foram representados juntos aqui. Com a reta traçada, os parâmetros $t_1$, $t_2$ e $\theta$ são obtidos a partir do ponto de intersecção dela com o eixo t e do ponto em que o valor da função é igual ao valor máximo do experimento.
+    
+%     \begin{minipage}{\linewidth}
+%         \centering
+%         \captionof{figure}{Exemplo da reta de Ziegler/Nichols}
+%         \includegraphics[width=0.5\textwidth]{img/ex-zn.png}
+%         \label{fig:ex-zn}
+%     \end{minipage}  
+    
+%     Assim, como o caráter da resposta do sistema é sobreamortecido, ela não apresenta pontos de inflexão e esse modelo não pode ser aplicado.
+
+%     \item Smith: Diferente dos métodos de Ziegler/Nichols e Hägglund, este não utiliza o trecho de máxima inclinação para determinar os parâmetros necessários. Ao invés disso, utiliza-se os pontos correspondentes a 28.3\% e 63.2\% do valor máximo de saída, onde a curva costuma se aproximar muito de uma linearidade. 
+    
+%     \begin{minipage}{\linewidth}
+%         \centering
+%         \captionof{figure}{Exemplo dos pontos de interesse para o método de Smith}
+%         \includegraphics[width=0.5\textwidth]{img/ex-smith.png}
+%         \label{fig:ex-smith}
+%     \end{minipage}
+    
+%     \item Sundaresan/Krishnaswamy: Semelhante ao método de Smith, também são definidos pontos onde a curva se aproxima da linearidade, porém nesse caso os pontos correspondem a 35.3\% e 85.3\% do valor máximo de saída.
+    
+%     \begin{minipage}{\linewidth}
+%         \centering
+%         \captionof{figure}{Exemplo dos pontos de interesse para o método de Sundaresan/Krishnaswamy}
+%         \includegraphics[width=0.5\textwidth]{img/ex-sundaresan.png}
+%         \label{fig:ex-sund}
+%     \end{minipage}
+    
+% \end{itemize}
+
+
+% \subsubsection{Teste do Modelo Matemático}
+
+% Foi implementado um \textit{script} na ferramenta \textit{Matlab/Octave} para análise e comparação dos modelos obtidos com os dados da planta, que foram extraídos os dados da tabela de dados CSV. O resultado foi analisado a partir de um gráfico gerado usando a função \textit{step}, mostrando os comportamentos dos modelos e da planta.
+
+% \newpage
+% \subsection{Resultados Obtidos}
+% \subsubsection{Comportamento da Planta Simulada}
+
+% Para a análise do comportamento da planta, foi realizada uma simulação em um intervalo de 200 segundos. Nesse intervalo foi aplicado um sinal de entrada degrau, ou seja, o sinal da válvula de entrada mudou de 5 para 6.
+% % \begin{figure}[H]
+% %     \centering
+% %     \caption{Dados obtidos da planta}
+% %     \includegraphics[width=0.8\textwidth]{img/dados-planta.png}
+% %     \label{fig:dados-planta}
+% %\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \caption{Dados Obtidos da planta}
+%     \begin{tikzpicture}
+%     \begin{axis}[xlabel=t (s),
+%                 xmin = 0,
+%                 ylabel=Nível (V),
+%                 font=\small,
+%                 width = \textwidth,
+%                 height = 0.5\textwidth ]
+%     \addplot table [y=level, x=t, mark=none]{step_test.dat};
+%     %\addlegendentry{Resposta da planta}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:dados-planta}
+% \end{figure}
+
+% O gráfico apresentado na figura \ref{fig:dados-planta} representa o nível de água no tanque em função do tempo após o sinal aplicado na válvula de entrada. Como pode-se observar, a curva resultante do experimento apresenta um comportamento sobreamortecido, estabilizando o nível em 7V.
+
+% Além disso, algumas variáveis puderam ser obtidas, as quais estão destacadas na tabela \ref{tab:var-obtidas}:
+
+% \begin{table}[H]
+%     \centering
+%     \begin{tabular}{c|c|c}
+%         \toprule
+%         $\Delta$ Nível (V) & Tempo de Acomodação (s) & Tempo de Subida (s)\\
+%         \midrule
+%         2.19 & 91.120 & 55.310 \\
+%         \bottomrule
+%     \end{tabular}
+%     \caption{Variáveis Obtidas}
+%     \label{tab:var-obtidas}
+% \end{table}
+% % t_settle =  92.120
+
+% % descrever comportamento planta
+% \subsection{Obtenção dos Modelos Matemáticos}
+
+% Para a obtenção dos modelos, foram testados os dois métodos detalhados nos itens da seção \label{sec:metodo-modelos} que podem ser aplicados nesse sistema.
+% %Matlab para desenvolvimento do modelo matemático e octave
+% %Ajuste para adequação dos parametros
+% %\subsubsection{Ziegler/Nichols e Hägglund}
+% %Como descrito anteriormente, esses modelos usam uma reta tangente partindo dos pontos de inflexão para determinar os parâmetros. No entanto, dado o caráter da resposta do sistema (sobreamortecido), ela não apresenta pontos de inflexão e as tentativas de desenhar a reta se mostraram inconclusivas.
+
+% %Sendo assim, esses modelos foram descartados e foi dado seguimento na análise com os outros métodos, que não partem de uma reta tangente.
+
+% \subsubsection{Smith}
+% O método de Smith, também explicado anteriormente em \ref{sec:metodo-modelos}, foi o mais eficiente e preciso na comparação com o comportamento da planta. Assim, obteve-se os dados para a função de transferência, como $t_1$, $t_2$ $\tau$ e $\theta$:
+% \begin{equation}
+% \begin{split}
+%     t_1 = 7.94 s \\
+%     t_2 = 23.74 s \\
+%     \tau = 1.5* ( t_2 - t_1) = 23.70 \\
+%     \theta = t_2 - \tau = 0.04 \\
+%     G_p(s) = \frac{K_p e^{-\theta s}}{\tau s + 1} \\
+%     \theta \approx 0 \\
+%     G_p(s) = \frac{K_p}{\tau s + 1} \\
+%     G_p(s) = \frac{2.19}{23.7 s + 1} \\
+% \end{split}
+% \end{equation}
+
+% Como pode-se perceber, a variável $\theta$ (tempo de atraso) encontrada foi muito próxima de zero, podendo ser desprezada. Além disso, tendo em vista que esse termo representa o atraso da resposta, ele foi suprimido pois o teste com sinal de entrada degrau foi feito sem atraso.
+
+% \subsubsection{Sundaresan/Krishnaswamy}
+% Utilizando os métodos previamente descritos em \ref{sec:metodo-modelos}, a função obtida foi a exposta na equação \ref{eq:sundersan}, novamente ignorando o termo de atraso, como feito para o método de Smith. Assim, obteve-se os dados para a função de transferência, como $t_1$, $t_2$, $\tau$ e $\theta$:
+% \begin{equation}
+% \begin{split}
+%     t_1 = 10.5 s \\
+%     t_2 = 45.37 s \\
+%     \tau = 0.6* ( t_2 - t_1) = 20.922  \\
+%     \theta = 1.3*t_1 - 0.29*t2 = 0.4927 \\
+%     G_p(s) = \frac{K_p e^{-\theta s}}{\tau s + 1} \\
+%     \theta \approx 0 \\ 
+%     G_p(s) = \frac{K_p}{\tau s + 1} \\
+%     G_p(s) = \frac{2.19}{20.92 s + 1}
+% \end{split}
+% \label{eq:sundersan}
+% \end{equation}
+
+% \subsection{Comparação dos Modelos}
+% Após obtidos os modelos matemáticos simplificados, foi gerado um gráfico com as três curvas: Resultado do experimento, Modelo de Smith e Modelo de Sundaresan. 
+% % \begin{figure}[H]
+% %     \centering
+% %     \caption{Comparação dos modelos}
+% %     \includegraphics[width=0.8\textwidth]{img/comparacao-modelos.png}
+% %     \label{fig:comp-modelos}
+% % \end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \caption{Comparação dos modelos}
+%     \begin{tikzpicture}
+%     \begin{axis}[xlabel=t (s),
+%                  xmin=0, xmax=220,
+%                  ymin=0,
+%                  ylabel=Nível (m),
+%                  legend pos=south east,
+%                  width = 0.95\textwidth,
+%                  height = 0.7\textwidth]
+%     \addplot[ultra thick, brown] table [y=Y_sund, x=T_sund, mark=none]{model_response.dat};
+%     \addlegendentry{Sundaresan}
+%     \addplot[ultra thick, red] table [y=y, x=t, mark=none]{step_test_norm.dat};
+%     \addlegendentry{Resposta da planta}
+%     \addplot[ultra thick, blue] table [y=Y_smith, x=T_smith, mark=none]{model_response.dat};
+%     \addlegendentry{Smith}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:comp-modelos-sund}
+% \end{figure}
+
+% Vale ressaltar que na figura \ref{fig:comp-modelos-sund}, as curvas de resposta da planta (em azul) e de Smith (em vermelho) estão visualmente sobrepostos, o que pode gerar confusão visual mas demonstra a acurácia do método no sistema aplicado.
+
+% A figura \ref{fig:comp-modelos-sund} mostra, em vermelho, a curva obtida pelo modelo de Smith, em cinza, o modelo de Sundaresan e, em azul, o resultado obtido na planta simulada. Destaca-se que as curvas atingem o mesmo valor de 2m de crescimento de nível no momento de estabilização e se comportam de forma semelhante.
+
+% Vale ressaltar que na figura \ref{fig:comp-modelos-sund} foi removido o valor médio de forma a obter uma visualização melhor. Além disso, os valores no eixo t vão desde o instante que é alterado o valor da válvula de entrada (estando no equilíbrio com $h=5m$) até a estabilização da planta.
+
+% Pode-se observar que o modelo de Smith é muito próximo dos dados do teste de entrada degrau, sendo que a maior parte da diferença advém de erro de quantização (Erro originado da precisão do sensor de nível), já que o sistema de leitura possui precisão de até 0.01 V.
+
+% Dessa forma, para as próximas etapas do projeto o ponto de partida será o modelo simplificado de Smith, descrito pela equação: 
+% \begin{equation}
+%      G(s) = \frac{2.19}{23.7 s + 1}
+%      \label{eq:planta}
+% \end{equation}
+% De modo a operar entre $0 \to 1$, o modelo normalizado da planta será o modelo obtido dividido por 10, pois o valor recebido pelo sensor para desenvolvimento da equação estava na faixa entre $0 \to 10$ V:
+% \begin{equation}
+%     G(s) = \frac{0.219}{23.7 s + 1}
+% \end{equation}
+ 
+% % descrever  diferenças entre modelos
+
+% %\subsection{Conclusão}
+%     %Reobservando os objetivos de estudar a planta, extrair os parâmetros fundamentais, desenvolver um modelo para equacionamento do sistema e exportar os dados. Pode-se dizer que o projeto cumpriu aquilo que foi estipulado até então, pois através dos dados extraídos com a planta simulada, o servidor \textit{modbus} e o modelo de equação desenvolvido, foi possível compreender o comportamento da planta e obter as informações necessárias para o desenvolvimento de um controlador PID.
+
+% 	%Olhando para as próximas etapas do trabalho, ainda será acrescido a esse projeto um sistema de controle e um supervisório para operação da planta. Dessa forma, foram concluídas apenas as etapas de extração de dados e estudo do projeto.
+
+% \section{Modelagem do Controlador}
+% \subsection{Arquitetura de Comunicação}
+
+% % \begin{center}
+% % \begin{tikzpicture}[auto, node distance=2cm,>=latex]
+%     % \node [input, name=SP, node distance=3cm] {};
+%     % \node [sum, right of=SP] (sum) {};
+    
+%     % \node [block, right of=sum] (controller) {Controlador};
+%     % \node [input, node distance=1.5cm, below of=controller] {Python};
+    
+%     % \node [block, right of=controller, node distance=5cm] (sys) {Planta};
+    
+%     % \node [block, right of=controller] (modbusin) {Modbus};
+%     % \node [block, right of=modbusin] (system) {Planta};
+%     % \node [output, right of=system] (output) {Nível};
+%     % \node [block, below of=modbusin] (modbusout) {Modbus};
+    
+%     % \node [block, below of=system] (feedback2) {$K_1$};
+%     % \node [block, below of=feedback2] (feedback1) {$K_2$};
+    
+%     % \draw [->] node {} (SP) -- node {Setpoint} (sum);
+%     % \draw [draw,->] (sum) -- node {} (controller);
+%     % \draw [->] (controller) -- node [name=u] {Sinal de controle} (modbusin);
+%     % \draw [->] (modbusin) -- node [u] {Sinal de controle} (system);
+%     % \draw [->] (output) -- node {$-$} (sum);
+%     % \draw [->] (sum) -- node {} (controller);
+%     % \draw [->] (input) -- node [] {+} (sum);
+%     % \draw [->] (output) -- node [name=y] (output);
+%     % \draw [->] (y) |- (sum);
+%     % \draw [->] (feedback2) -| node[pos=0.99] {$-$} node {} (sum2);
+%     % \draw [->] (y) |- (feedback1);
+%     % \draw [->] (feedback1) -| node[pos=0.99] {$-$} node [near end] {$y_m$} (sum1);
+% % \end{tikzpicture}
+% % \end{center}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Layout orientado a comunicação}
+%     \includegraphics[width=\textwidth]{img/arq-comm.png}
+%     \label{fig:arq-comm}
+% \end{figure}
+
+% \subsection{Metodologia}
+%     Para obtermos a equação que rege o controlador, inicialmente foram feitos alguns modelos diferentes para que os resultados pudessem ser analisados. Assim, como de costume ao se projetar um controlador da família PID, começamos calculando e testando um controlador do tipo Proporcional e, em seguida, um controlador do tipo Proporcional-Integrador.
+    
+%     Em cada caso, foi manipulada a equação \ref{eq:planta} de forma a incluir a ação do controlador em questão, inserindo os ganhos relevantes.
+% \subsubsection{Controlador P}
+% Tomando o controlador:
+% \begin{equation}
+% C(s) = K_p
+% \end{equation}
+
+% Em malha aberta:
+% \begin{equation}
+%     G_pa(s) = \frac{K_p \cdot 0.219}{23.7 \cdot s + 1}
+%      \label{eq:planta-com-p}
+% \end{equation}
+
+% Em malha fechada:
+
+% \begin{equation}
+%  G_p(s) = \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)}
+% \end{equation}
+
+%     Foi calculado um controlador Proporcional de forma a atender o requisito inicial de $E_{reg}$ de 10\%, utilizando a equação do próprio Erro de Regime:
+    
+%     \begin{equation}
+%      E_{reg} = \lim_{s \to 0} s \cdot \left( U(s) - U(s) \cdot G_p(s) \right)
+%     \label{eq:e-reg}
+%     \end{equation}
+%     Sendo o sinal de entrada U(s) um sinal degrau, teremos:
+%     \begin{equation} \begin{split}
+%         E_{reg} = \lim_{s \to 0} s \cdot \left( \frac{1}{s} - \frac{1}{s} \cdot \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)} \right) \\
+%         E_{reg} = 1 -\frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
+%         E_{reg} = 0.1 = 1 -\frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
+%         0.9 = \frac{K_p \cdot 0.219}{(1 + K_p \cdot 0.219)} \\
+%         0.9 + K_p \cdot 0.9 \cdot 0.219 = K_p \cdot 0.219 \\
+%         0.9 = K_p \cdot  (0.219 - 0.9 \cdot 0.219) \\ 
+%         K_p = \frac{0.9}{0.1 \cdot 0.219} = 41.0959 \\
+%     \end{split} \label{eq:calc-e-reg} \end{equation}
+%         % E_{reg} = \lim_{s \to 0} \left( 1 - \frac{K_p \cdot 0.219}{23.7 \cdot s + (1 + K_p \cdot 0.219)} \right)\\
+%         % - 0.495 = \frac{0.1 - 0.9 \cdot 0.219 \cdot K_p}{1 + K_p\cdot 0.219} \\
+%         % - 0.495 \cdot (1 + K_p\cdot 0.219) = 0.1 - 0.9 \cdot 0.219 \cdot K_p \\
+%         % - 0.108405 \cdot K_p + 0.9 \cdot 0.219 \cdot K_p = 0.595 \\
+%         % K_p = \frac{0.595}{0.9 \cdot 0.219 - 0.108405} = 6.70838266\\
+    
+% \subsubsection{Controlador PI}
+%  já em malha fechada
+% \begin{equation}
+%      G_p(s) = \frac{ ( K_p \cdot s + K_i) \cdot 0.219 }{23.7 \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219}
+%      \label{eq:planta-com-pi}
+% \end{equation}
+
+%     %Os ganhos foram calculados de forma a atender um sobressinal de 5\%, o que leva a 
+%     %$\xi = 0.69$.
+%     % Considerando a equação de $G(s)$ normalizada:
+%     % \begin{equation}
+%     %     G(s) = \frac{(K_p \cdot 0.219}{23.7 \cdot s + 1} \\
+%     % \end{equation}
+    
+%     Comparando a equação de $G_p$ com a sua forma canônica, tendo como objetivo um sobressinal de 5\%, erro nulo e tempo de acomodação de 30s, ou seja $\xi = 0.69$ ($S_0 = 0.05$) e estimando $t_a = 30s$, temos que:
+%     \begin{equation} \begin{split}
+%         %\frac{1}
+%         s^2 + s \cdot 2 \cdot \xi \cdot \omega_n + \omega_n^2  \text{, e   } %\frac{K_p \cdot s + K_i} 
+%         23.7 \cdot s^2 + (1 + K_p \cdot 0,219) \cdot s + K_i \\
+%         t_a = \frac{4}{0.69 \cdot \omega_n} \\
+%         \omega_n = \frac{4}{0.69 \cdot t} \\
+%         \omega_n = 0.1159 \frac{rad}{s} \\
+%     \end{split} \end{equation}
+%     Encontrando $K_i$ : 
+%     \begin{equation} \begin{split}
+%         \frac{K_i \cdot 0.219}{23.7} = \omega_n^2 \\
+%         K_i = \omega_n^2 \cdot \left( \frac{23.7}{0.219} \right) = 1.453
+%     \end{split} \end{equation}
+%         Encontrando $K_p$ :
+%     \begin{equation} \begin{split}
+%         \frac{1 + K_p \cdot 0.219}{23.7} =  \omega_n \cdot \xi \\
+%         K_p =  \frac{23.7 \cdot 2 \cdot \omega_n \cdot \xi - 1}{0.219} = 12.7426 
+%     \end{split} \end{equation}
+
+% \subsubsection{Controlador PID}
+%  já em malha fechada
+% \begin{equation}
+%      G_p(s) = \frac{ (K_d \cdot s^2 + K_p \cdot s + K_i) \cdot 0.219 }{(23.7 + 0.219 \cdot K_d) \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219}
+%      \label{eq:planta-com-pi}
+% \end{equation}
+
+%     %Os ganhos foram calculados de forma a atender um sobressinal de 5\%, o que leva a 
+%     %$\xi = 0.69$.
+%     % Considerando a equação de $G(s)$ normalizada:
+%     % \begin{equation}
+%     %     G(s) = \frac{(K_p \cdot 0.219}{23.7 \cdot s + 1} \\
+%     % \end{equation}
+    
+%     Comparando a equação de $G_p$ com a sua forma canônica, tendo como objetivo um sobressinal de 5\%, erro nulo e tempo de acomodação de 30s, ou seja $\xi = 0.69$ ($S_0 = 0.05$) e estimando $t_a = 30s$, temos que:
+%     \begin{equation} \begin{split}
+%         %\frac{1}
+%         s^2 + s \cdot 2 \cdot \xi \cdot \omega_n + \omega_n^2  \text{, e   } %\frac{K_p \cdot s + K_i} 
+%         (23.7 + 0.219 \cdot K_d) \cdot s^2 + (1 + K_p \cdot 0.219) \cdot s  + K_i \cdot 0.219 \\
+%         t_a = \frac{4}{0.69 \cdot \omega_n} \\
+%         \omega_n = \frac{4}{0.69 \cdot t} \\
+%         \omega_n = 0.1159 \frac{rad}{s} \\
+%     \end{split} \end{equation}
+%     Encontrando $K_i$ : 
+%     \begin{equation} \begin{split}
+%         \frac{K_i \cdot 0.219}{0,219 \cdot k_d + 23.7} = \omega_n^2 \\
+%         K_i = \omega_n^2 \cdot \left( \frac{0,219 \cdot k_d + 23.7}{0.219} \right)
+%     \end{split} \end{equation}
+%         Encontrando $K_p$ :
+%     \begin{equation} \begin{split}
+%         \frac{1 + K_p \cdot 0.219}{23.7 + K_d \cdot 0.219} = 2 \cdot \omega_n \cdot \xi \\
+%         K_p =  \frac{2 \cdot \xi \cdot \omega \cdot (23.7 + K_d \cdot 0.219) - 0.219}{0.219} \\
+%     \end{split} \end{equation}
+    
+% Supondo $K_d = 5$ nas equações anteriores, temos $K_i = 1,517$ e $K_p = 13,539$.
+% %Apenas em caráter experimental, foram tomados como base os ganhos do controlador PI e, em conjunto de um pequeno $K_d = 0.5$, foi aplicado um controle PID completo para avaliar a resposta obtida.
+% \subsubsection{Modelagem Discreta Direta}
+% Com o objetivo de prova para o método direto do cálculo dos ganhos no modelo discreto, foi calculado um controlador P para a planta no domínio Z, usando apenas um requisito, de tempo de acomodação ($t_a$) de 40 segundos. Sendo a planta:
+% \begin{equation}
+%   G(s) = \frac{0.219}{23.7 s + 1} 
+% \end{equation}
+
+% Começamos encontrando a equação da planta no domínio Z, utilizando a transformada de $\frac{G(s)}{s}$ e o segurador de ordem zero:
+
+% \begin{equation} 
+% \begin{split}
+%     G(z) = (1-z^{-1}) \cdot \mathcal{Z} \left\{ \left. \left( \mathcal{L} \left\{ \frac{G(s)}{s} \right\} \right) \right| _{t=kT} \right\} \\
+%     G(z) = (1-z^{-1}) \cdot \mathcal{Z} \left\{ \left. \left( \mathcal{L} \left\{ \frac{0.219}{s(23.7 s + 1)} \right| _{t=kT} \right\} \right)  \right\} \\
+% \end{split}
+% \end{equation}
+
+% Utilizando a identidade:
+% \[ \frac{a}{s(s+a)} = \frac{1-e^{-aT} z^{-1}}{(1 - z^{-1})\cdot(1-e^{-at}z^{-1})} \]
+
+% \begin{equation} 
+%     G(z) = 0.219 \cdot \frac{(1-e^{-\frac{T}{23.7}})z^{-1}}{1-e^{-\frac{T}{23.7}}z^{-1}}
+% \end{equation}
+% %          c = e^{-\frac{T}{23.7}}
+% Multiplicando por $\frac{z}{z}$ para levar a equação a valores positivos nos expoentes de z:
+% \begin{equation} 
+%     G(z) =  \frac{0.219(1-e^{-\frac{T}{23.7}})} {z-e^{-\frac{T}{23.7}}}
+% \end{equation}
+% Para o requisito apresentado, teremos os polos em S da seguinte forma: (para tempo de acomodação de 98\%)
+
+% \begin{equation}
+% \begin{split}
+%     t_a=40s \\
+%     t_a=\frac{4}{|polo|} \\
+%     Polo = 0.1 \\
+%     S = -0.1 \\
+% \end{split}
+% \end{equation}
+
+% Desse polo em S, transformamos em polo de Z pelo método abaixo, e em seguida montamos a equação do polinômio característico que procuramos: ($T=0.3$)
+% \begin{equation}
+% \begin{split}
+%     Z=e^{sT}=0.97 \\
+%     F_d(z)=z-0.97 \\
+% \end{split}
+% \end{equation}
+% Agora, para a equação do controlador em si, assumiremos seu grau como 1, já que o grau da planta também ficou em 1. Assim:
+% \begin{equation}
+% \begin{split}
+%     C(z)=\frac{K(z+c_1)}{(z+c_2)} \\
+%     F_t(z)=G(z) \cdot C(z) \\
+%     F_t(z)=\frac{K(z+c_1)}{(z+c_2)} \cdot \frac{0.219(1-e^{-\frac{T}{23.7}})} {z-e^{-\frac{T}{23.7}}} \\
+% \end{split}
+% \end{equation}
+
+% Agora, para reduzir a quantidade de variáveis livres, definimos $c_1=e^{-\frac{T}{23.7}}$, obtendo assim a equação para $F_t(z)$, que então usamos para fechar a malha:
+% \begin{equation}
+% \begin{split}
+%     F_t(z)=\frac{0.219K(1-e^{-\frac{T}{23.7}})}{(z+c_2)} \\
+%     \frac{Y(z)}{R(z)}=\frac{F_t(z)}{1-F_t(z)} \\
+%     \frac{Y(z)}{R(z)}=\frac{0.219K(1-e^{-\frac{T}{23.7}})}{0.219K(1-e^{-\frac{T}{23.7}})+(z+c_2)} \\
+% \end{split}
+% \end{equation}
+% Comparando o divisor da equação com o polinômio característico que encontramos anteriormente, chegamos a uma equação que relaciona K com $c_2$, ambos desconhecidos:
+% \begin{equation}
+% \begin{split}
+%   0.219K(1-e^{-\frac{T}{23.7}})+(z+c_2) = (z-0.97) \\
+%   c_2=-0.97-0.002755K \\
+% \end{split}
+% \end{equation}
+% Utilizamos alguns testes para definir os valores de $c_2$ e K e, assim, podermos chegar a equação final para o controlador, e realizar testes com os resultados encontrados aqui.
+% \begin{equation}
+% \begin{split}
+%   C(z)=\frac{K(z-0.98742)}{z+c_2}
+% \end{split}
+% \end{equation}
+% \begin{equation}
+% \begin{split}
+%      K= 10.95 ; c_2= -1.0002
+% \end{split}
+% \end{equation}
+% A partir disso, combinou-se a equação do controlador (27) com a equação (25) da função transferência e o modelo foi testado no \textit{MatLab}, obtendo a seguinte curva resposta:
+% \begin{figure}[H]
+%     \centering
+%     \caption{Simulação no \textit{Matlab} com controlador discreto}
+%     %\includegraphics[width=\textwidth]{img/grafico discreto.png}
+%     \begin{tikzpicture}
+%     \begin{axis}[xlabel=t (s),
+%               xmin = 0, xmax=,
+%               ymin = 0, ymax = 1.2,
+%               ylabel=Amplitude,
+%               font=\small,
+%               width = \textwidth,
+%               height = 0.5\textwidth ]
+%     \addplot table [y=t, x=A, mark=none]{res.dat};
+%     \addlegendentry{Resposta com controlador discreto}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:res-discreto}
+%     \end{figure}
+    
+% Com a curva, ficou comprovado que o sistema atendeu o requisito de tempo de acomodação, estabilizando 2s antes do estipulado. 
+% \subsection{Resultados Obtidos}
+% \subsubsection{Controlador P}
+% Inserindo o controlador do tipo proporcional no sistema em malha fechada, tomando como expectativa o erro assumido de 1\% e aplicando o ganho calculado $K_p = 99$, obteve-se a seguinte resposta na simulação:
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Teste P}
+%     \begin{tikzpicture}
+%     \begin{axis}[
+%     xlabel=t (s),
+%     xmin=0, xmax=\xPID,
+%     ymin=-0.15, ymax=\yPID,
+%     font=\small,
+%     %ylabel=Nível (m),
+%     legend pos=north east,
+%     width = 0.95\textwidth,
+%     height = 0.7\textwidth]
+%     \addplot[brown] table [y=out_valve, x=t, mark=none]{teste-P.csv};
+%     \addlegendentry{Sinal de controle}
+%     \addplot[red] table [y=level, x=t, mark=none]{teste-P.csv};
+%     \addlegendentry{Nível no tanque}
+%     \addplot[green] table [y=setpoint, x=t, mark=none]{teste-P.csv};
+%     \addlegendentry{Setpoint}
+%     \addplot[blue] table [y=error, x=t, mark=none]{teste-P.csv};
+%     \addlegendentry{Erro}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:comp-modelos-P}
+% \end{figure}
+
+% Como pode-se observar, ao atingir o valor pré-definido, o nível fica oscilando com um erro máximo de 1.8\% e como o controle é apenas proporcional, o sinal de controle oscila excessivamente, entre o seu valor máximo e mínimo. Isto seria altamente danoso à um equipamento real e geraria grande desgaste, o que tornaria este controle impraticável. Uma solução mais adequada neste caso, seria utilizar um controle ON/OFF com histerese. 
+
+% %isso porque o sinal de controle é completamente instável e não apresenta perspectiva de estabilização em nenhum momento, sendo essa uma característica esperada em controladores P nesse cenário. Ou seja, apesar do sistema se aproximar do requisito de erro estipulado, ele se torna impraticável.
+
+% \subsubsection{Controlador PI}
+% Inserindo o controlador do tipo Proporcional-Integrativo no sistema em malha fechada, sabendo que um controlador PI apresenta erro de 0\% e tomando como expectativa um sobressinal assumido de 5\%, aplicando os ganhos calculados $K_p = 12.6455$ e $K_i = 3.4394$ resultou na seguinte resposta de simulação:
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Teste PI}
+%     \begin{tikzpicture}
+%     \begin{axis}[xlabel=t (s),
+%                  xmin=0, xmax=\xPID,
+%                  ymin=-0.15, ymax=\yPID,
+%                  ylabel=Valores normalizados,
+%                  legend pos=north east,
+%                  font=\small,
+%                  width = 0.95\textwidth,
+%                  height = 0.7\textwidth]
+%     \addplot[blue] table [y=error, x=t, mark=none]{teste-PI.csv};
+%     \addlegendentry{Erro}
+%     \addplot[red] table [y=level, x=t, mark=none]{teste-PI.csv};
+%     \addlegendentry{Nível do tanque}
+%     \addplot[green] table [y=setpoint, x=t, mark=none]{teste-PI.csv};
+%     \addlegendentry{Setpoint}
+%     \addplot[brown] table [y=out_valve, x=t, ]{teste-PI.csv};
+%     \addlegendentry{Sinal de controle}
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:comp-modelos-PI}
+% \end{figure}
+
+% Como esperado em um controlador PI, o erro em regime é nulo. Além disso, o sobressinal máximo obtido foi de 1.45\%, ou seja, muito abaixo dos 5\% esperados, fazendo com que o nível no tanque ultrapasse muito pouco o valor desejado antes de estabilizar. Já o tempo de acomodação é de 35s, excedendo o valor estipulado, mas ainda sendo útil em um sistema real.
+    
+% \subsubsection{Controlador PID}
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Teste PID}
+%     \begin{tikzpicture}
+%     \begin{axis}[xlabel=t (s),
+%                  xmin=0, xmax=\xPID,
+%                  ymin=-0.15, ymax=\yPID,
+%                  %ylabel=Nível (m),
+%                  legend pos=north east,
+%                  font=\small,
+%                  width = 0.95\textwidth,
+%                  height = 0.7\textwidth]
+%     \addlegendentry{Nível no tanque}
+%     \addplot[blue] table [y=error, x=t, mark=none]{teste-PID.csv};
+%     \addlegendentry{Setpoint}
+%     \addplot[red] table [y=level, x=t, mark=none]{teste-PID.csv};
+%     \addlegendentry{Erro}
+%     \addplot[green] table [y=setpoint, x=t, mark=none]{teste-PID.csv};
+%     \addlegendentry{Sinal de controle}
+%     \addplot[brown] table [y=out_valve, x=t, ]{teste-PID.csv};
+%     \end{axis}
+%     \end{tikzpicture}
+%     \label{fig:comp-modelos-PID}
+% \end{figure}
+
+%     Em caráter experimental, foi feito um teste com $K_d = 5$, utilizando os valores calculados na parte de metodologia. A resposta obtida foi um pouco mais oscilatória, mas sem nenhuma alteração significativa no valor de sobressinal (pelo menos no fundo de escala utilizado). No entanto, considerando o custo de implementação e a natureza do sistema este controlador não aparentou melhorias significativas.
+%     %Foram pesquisadas bibliotecas para a linguagem de programação utilizada no software de captura de dados, já tendo em mente a integração com o sistema de controle.
+%     %A biblioteca que será utilizada para a implementação inicial será a \href{https://pypi.org/project/simple-pid/}{Simple PID}. Será futuramente avaliada sua performance e precisão para a aplicação e se for necessário é sujeita a troca.
+%     %Essa etapa do projeto terá como ponto de partida o modelo matemático escolhido, além das restrições para determinação de um modelo de controle PID.
+% \newpage
+
+% \section{Integração de Sistemas}
+
+% \begin{figure}[H]
+%     \centering
+% \caption{\textit{Layout} de Comunicação Geral}
+% \includegraphics[width=0.8\textwidth]{img/diagrama-geral.png}
+%     \label{fig:arq_geral}
+% \end{figure}
+
+% Ao integrar o supervisório, o controlador e a planta, foram implementados 2 pares cliente-servidor \Mb: um entre o supervisório e o controlador, e outro entre o controlador e a planta; sendo um cliente e um servidor implementados em \Py.
+
+% Foram definidos registradores de entrada e saída para ambos os pares, sendo os da planta expostos na figura \ref{fig:conn-modbus} e do supervisório na figura \ref{fig:tags-comm-2}. 
+
+% Internamente na implementação em \Py, são utilizadas duas \textit{threads} que se comunicam via filas, representado no diagrama pela letra "\texttt{q}". Isto é feito de modo a desacoplar o tempo de execução dos dois processos. Além disso, essa é a forma recomendada de implementar comunicação e troca de dados segura entre processos sem problemas de concorrência e sincronismo (compartilhar memória é contraindicado e, na linguagem escolhida, praticamente impossível).
+
+% Por exemplo: o processo da planta, idealmente, deve rodar em um \textit{loop} de tempo fixo igual ao tempo de amostragem escolhido para o sistema (neste caso $T=0.3$). Integrar os dois componentes mantendo este requisito seria dispendioso e reduziria muito a modularidade do código.
+
+% A seguir serão abordadas as alternativas de comunicação testadas ao longo do projeto e, de uma forma mais detalhada, explicada como as partes do sistema interagem ao longo da execução.
+% %de registradores, dos quais são usados dois para realizar as operações de leitura e escrita das informações do servidor. O código do servidor assíncrono foi feito em \textit{Python} usando inicialmente a biblioteca \textit{PyModbus}.
+% %expando isso?
+% %Pode-se ver na figura \ref{fig:arq_geral} uma visão geral da arquitetura e a relação entre os componentes do sistema.
+
+% \subsection{Alternativas de \textit{Driver} e Comunicação}
+
+% Ao longo desse desenvolvimento, foram testadas diversas soluções para a troca de informações do supervisório com o servidor e outros elementos do sistema, visando uma que fosse funcional, estável e permitisse o envio e recebimento das informações precisas. Dessa forma, as principais alternativas consideradas estão listadas nos tópicos abaixo:
+
+% \begin{itemize}
+%     \item OPC/UA: foi utilizado para testes, no entanto não foi explorado pois mostrou-se demasiadamente complexo para a aplicação em questão.
+%     \item MQTT: apesar de possuir configuração e utilização bastante simples, o \textit{driver} deste protocolo disponível para \EE não permite, por algum defeito pontual, se conectar à rede quando a interface está operando. %possui um defeito onde conectava com sucesso se ligado manualmente, mas não quando ligado à interface.
+%     %F for MQTT ;-;
+%     %F -Wolf -ternao
+%     %éfi
+%     \item \Mb: 
+%     \begin{itemize}
+%         \item \EE~ - Foram testados dois \textit{drivers} cliente: \textit{Enron} e \textit{Modicon}; somente o \textit{driver} \textit{Modicon} funcionou corretamente, portanto foi o selecionado para utilização na solução final.
+%         \item Servidor \Py~ - Foram testadas duas bibliotecas que implementam servidores \Mb: \textit{PyModbus} e \textit{pyModbusTCP}; O driver \textit{PyModbus} foi escolhido por ser mais robusto e estar mais estável, visto que o \textit{PyModbusTCP} ainda está em versão preliminar.
+%         \end{itemize}
+% \end{itemize}
+
+% \subsection{Detalhamento da Solução Final}
+% Depois de definidas as alternativas de desenvolvimento escolhidas anteriormente, foi implementado um servidor usando a biblioteca \textit{PyModbus}. Nesse sistema, para cada evento ou escrita nos registradores, o servidor \Mb{} chama um \textit{callback}, ou processador do evento.
+
+% Cada um desses eventos, os quais contêm um código de função, endereço e valor, são colocados em uma fila e mapeados em comandos no processo \texttt{soft\_plc}, por meio de um dicionário onde a chave é o endereço onde ocorreu uma escrita e o valor é o comando associado. Abaixo está detalhado o código em questão.
+
+% %função processadora de evento, para o evento de qualquer escrita em registradores \Mb, estes eventos, cada um contendo um código de função, endereço e valor, são colocados em uma fila e mapeado em comandos no processo \texttt{soft\_plc}, por meio de um dicionário onde a chave o \texttt{dict} abaixo
+
+% \begin{minted}{python}
+% plant_co_map = {
+%     self.co.START_BTN.value: plant.Command.START,
+%     self.co.STOP_BTN.value:  plant.Command.STOP,
+%     self.co.EMERG_BTN.value: plant.Command.EMERGENCY,
+%     self.co.AUTO_MODE.value: plant.Command.AUTO_MODE,
+% }
+% plant_hr_map = {
+%     self.hr.IN_VALVE.value:  plant.Command.IN_VALVE,
+%     self.hr.OUT_VALVE.value: plant.Command.OUT_VALVE,
+%     self.hr.SETPOINT.value:  plant.Command.SETPOINT,
+%     self.hr.K_P.value:       plant.Command.SET_K_P,
+%     self.hr.K_I.value:       plant.Command.SET_K_I,
+%     self.hr.K_D.value:       plant.Command.SET_K_D,
+% }
+% \end{minted}
+% A cada ciclo de execução o processo \texttt{plant} lê valores da planta, via cliente \Mb, calcula o sinal de controle (se o controlador estiver habilitado) e gera resultados por meio de uma fila de saída, no formato especificado abaixo:
+
+% \begin{minted}{python}
+% res = {
+%     self.Output.TIME : 0,
+%     self.Output.LEVEL : 0,
+%     self.Output.OUTFLOW : 0,
+%     self.Output.OUT_VALVE : 0,
+%     self.Output.IN_VALVE : 0,
+%     self.Output.SETPOINT : 0,
+%     self.Output.DT : 0,
+% }
+% \end{minted}
+% Este ciclo é pensado de modo que, na medida do possível, haja um tempo de execução fixo (o principal limitador é o atraso da rede).
+
+% %No caso desses resultados comandos a serem enviados pelo controlador, estes são processados. O objeto de resultado têm a forma:
+
+% %Quanto ao processo da planta, a cada ciclo são produzidos objetos de resultado por meio de uma fila de saída e, no caso de comandos serem enviados pelo controlador, estes são processados. O objeto de resultado têm a forma:
+
+% Também, durante um ciclo, o processo checa se há itens na sua fila de entrada (cada item é um par de comando e valor), sendo que cada função obtida por este mapeamento é chamada com o valor associado. O mapeamento está exposto na seção de código abaixo:
+
+% \begin{minted}{python}
+% cmd_map = {
+% 	self.Command.STOP : self.stop ,
+% 	self.Command.START : self.start ,
+% 	self.Command.EMERGENCY : self.emergency ,
+% 	self.Command.AUTO_MODE : self.pid.set_auto_mode ,
+% 	self.Command.SETPOINT : self.set_setpoint ,
+% 	self.Command.IN_VALVE : self.set_in_valve ,
+% 	self.Command.OUT_VALVE : self.set_out_valve ,
+% 	self.Command.SET_K_P : self.set_kp ,
+% 	self.Command.SET_K_I : self.set_ki ,
+% 	self.Command.SET_K_D : self.set_kd ,
+% }
+% \end{minted}
+
+% Já no \texttt{soft\_plc}, os valores lidos da fila de saída de \texttt{plant} são utilizados para atualizar os endereços correspondentes à estes valores no servidor \Mb{}. Como a implementação \Mb{} utiliza somente números inteiros, todos os valores comunicados por meio de \Mb{} (desde a planta) possuem \textit{offset} decimal de 1000. Esta constante é informada ao supervisório por meio de um registrador. 
+
+% Sendo assim, os dados estão no formato adequado para serem compreendidos pelo \textit{driver} do supervisório e, consequentemente, pelo usuário.
+% %outro
+
+% \section{Supervisório}
+% \subsection{Estrutura do Supervisório}
+% %% O supervisório foi estruturado a partir de 3 classes: Elementos, Botões e Comunicação %%
+% Para desenvolvimento da interface para o usuário, foi feito um supervisório no \EE, o qual está estruturado com base em dois tipos de elementos, os atuadores e mostradores, conforme descrito abaixo.
+ 
+% \begin{itemize}
+% \item Atuadores
+% \begin{itemize}
+%     \item Botão de ligar: inicia o sistema, começando já ativado ao ligar o supervisório;
+%     \item Botão de parar: encerra a simulação no programa \factorio;
+%     \item Botão de emergência: fecha as válvulas e interrompe os sistemas imediatamente; 
+%     \item Carregar: atualiza valores de entrada de Kp, Ki, Kd e nível;
+%     \item Atualizar: atualiza a tabela referente; 
+%     \item Botões de Modo: alteram o modo de operação do sistema, de automático para manual;
+%     \item Abertura das válvulas de entrada e saída: alteram, através de um conjunto de controles deslizantes, a porcentagem de abertura das válvulas de entrada e saída;
+%     \item Salvar: atualiza a habilitação dos limites do alarme de nível e também seus respectivos valores;
+%     \item \textit{Login}: permite que o usuário realize \textit{login} no sistema;
+%     \item Análise gráfica: mostra um gráfico, em janela separada, com o comportamento do sistema ao longo do tempo;
+%     \item Configuração do sistema: abre uma janela modal onde se permite configurar parâmetros do sistema;
+%     \item Alarmes: abre uma janela modal onde se permite configurar o alarme de nível e também possui uma tabela com o histórico de disparos;
+%     \item Histórico de configurações: abre uma janela modal que possui tabelas demonstrando o histórico de alterações de parâmetros e também o histórico de valores do sistema.
+% \end{itemize}
+% \item Mostradores
+% \begin{itemize}
+%     \item Sinaleira: 3 luzes indicando o estado do sistema: funcionando, parado ou emergência;
+%     \item Nível: apresenta o nível atual de água no tanque, em metros e em \%;
+%     \item Fluxo: apresenta a taxa de passagem de fluido, em \%;
+%     \item Abertura das válvulas de entrada e de saída: mostra, em \%, o quão aberta está cada válvula;
+%     \item Erro: Expõe o erro, em \%, da resposta;
+%     \item Risco de nível: apresenta ao usuário a situação do nível do tanque de acordo com os limites do alarme;
+%     \item Ganhos: mostram os ganhos, Kp, Ki e Kd, atuais;
+%     \item Gráfico: registra o comportamento do sistema ao longo do tempo;
+%     \item Nível desejado: apresenta o valor de nível desejado mais recente estabelecido pelo usuário;
+%     \item Histórico de alarmes: tabela contendo os últimos alarmes de nível disparados e o usuário que os configurou;
+%     \item Histórico de configurações: tabela que armazena todas as alterações realizadas na configuração do sistema e o usuário responsável por elas;
+%     \item Histórico de dados da planta: tabela com a finalidade de apresentar um histórico de valores essenciais do sistema, atualizando-os a cada 5 segundos;
+% \end{itemize}
+% \end{itemize}
+
+% Nas próximas seções serão expostos como os elementos estão distribuídos nas telas e como ocorre a comunicação com a planta.
+
+% \subsection{Telas da Interface}
+
+% O supervisório é composto por cinco telas, onde a primeira é o Painel de Monitoramento. A sua principal função é apresentar a situação atual do sistema, contendo a sinaleira, os mostradores de nível, de fluxo, de erro e do estado das válvulas. Além disso, ela também têm os comandos básicos para iniciar, parar, acessar o gráfico do sistema, o painel de configuração do sistema e o painel de configuração dos alarmes. 
+
+% Além disso, possui um mostrador de alarme referente ao nível atual do tanque e seu risco potencial, bem como um botão de emergência, responsável por fechar ambas as válvulas o mais rápido possível.
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Tela de Monitoramento} \includegraphics[width=0.8\textwidth]{img/ui_geral.png}
+%     \label{fig:tel1}
+% \end{figure}
+
+% A segunda tela, chamada Configuração do Sistema, é somente acessível por usuários autorizados, mediante a \textit{login} e senha. Nela é possível realizar diversas alterações no funcionamento do sistema, sendo elas: alteração de ganhos, nível desejado, modo e abertura das válvulas (caso o sistema esteja em manual). Adicionalmente, possui um botão de emergência, os botões de acesso ao gráfico do sistema e ao histórico de alterações, os mostradores para visualizar o valor atual daquilo que se deseja alterar e uma miniatura do gráfico gerado pelo sistema.
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Tela de Configuração} \includegraphics[width=0.8\textwidth]{img/ui_config.png}
+%     \label{fig:tel2}
+% \end{figure}
+
+% Na tela de Configuração de Alarmes, também restrita a usuários autorizados, podem ser habilitados ou desabilitados os limites do alarme de nível presente no painel de monitoramento, bem como alterar seus valores. Ela possui também uma tabela conectada a um banco de dados, responsável por registrar todos os disparos do alarme, bem como o momento em que foi disparado e o usuário que o configurou.
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Tela de Configuração de alarmes} \includegraphics[width=0.8\textwidth]{img/ui_alarm.png}
+%     \label{fig:ui_alarm}
+% \end{figure}
+
+% A quarta tela é referente ao histórico de alterações nas configurações do sistema e o usuário responsável pelas mesmas, além do histórico de valores essenciais do sistema, como os de nível, fluxo e abertura das válvulas de entrada e saída, sendo atualizado a cada 5 segundos. Ambos os históricos são mostrados em tabelas e estão conectados a seus respectivos bancos de dados.
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Tela de Histórico} \includegraphics[width=0.8\textwidth]{img/ui_hist.png}
+%     \label{fig:ui_hist}
+% \end{figure}
+
+% A quinta e última tela, de Análise Gráfica, contém um gráfico gerado em tempo real pelo sistema em função do tempo, demonstrando as curvas relacionadas ao nível atual, ao nível desejado, ao erro e ao sinal de controle (abertura da válvula de saída).
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Tela de Análise Gráfica} \includegraphics[width=0.8\textwidth]{img/ui_graph.png}
+%     \label{fig:analise_grafica}
+% \end{figure}
+
+% \subsection{Comunicação}
+% %Para a comunicação com o \factorio{} foi instalado um driver \textit{modbus} no ambiente do projeto do supervisório, ele utiliza comunicação TCP/IP e possibilita o envio e recebimento de dados através do protocolo \textit{modbus}.
+% %driver+in/out+registradores+servidor
+
+% Para realizar a integração entre a simulação operada pelo \factorio e o supervisório designado no \EE, foi utilizado um servidor programado em \Py{} se comunicando pelo protocolo \Mb, como detalhado anteriormente. Para isso foi instalado e configurado o \textit{driver} \Mb escolhido conforme os critérios já apresentados. Na imagem abaixo está detalhado o esquema de entradas e saídas.
+
+% \begin{landscape}
+% \begin{figure}[H]
+%     \centering
+% \caption{Tags de Comunicação entre o \EE e o servidor \Py{}}
+% \includegraphics[width=23cm]{img/tags_driver.png}
+%     \label{fig:tags-comm-2}
+% \end{figure}
+
+% \end{landscape}
+
+% \newpage
+
+% \section{Conclusão}
+
+% Com o projeto concluído, deve-se retomar tudo aquilo que foi feito, desde o entendimento da situação problema, até a montagem de uma solução para operação.
+ 
+% O sistema desenvolvido engloba quatro elementos principais: a planta virtual que contém um tanque com sensores de monitoramento e válvulas de entrada e saída; o cliente que simula o controlador de nível da planta; o supervisório para operação do controlador; e o servidor que integra os elementos. Todos as partes se comunicam através do protocolo de rede \Mb, permitindo que cada uma delas opere em uma máquina diferente se for preciso.
+
+% Além desses elementos, foi desenvolvido um modelo matemático da planta a partir dos ensaios realizados, permitindo o cálculo dos controladores. Para a operação desse sistema, foram formulados quatro diferentes funções: controlador P, controlador PI, controlador PID e controlador discreto de 1ª ordem. Dos quais o controlador PI se mostrou mais vantajoso.
+
+% Dessa forma, esse Projeto Integrador possibilitou uma combinação de modelagem e desenvolvimento matemático, operação da planta e comunicação entre máquinas e com o operador, assim gerando um grande aprendizado prático, mesmo em um projeto feito inteiramente no período de EAD. 
+
+% O uso da linguagem em \Py{} aliada aos protocolos de comunicação industrial possibilitou uma solução adaptada ao mercado atual e aprimorável, no entanto resultou em algumas inconsistências e adversidades no processo de troca de informações com a interface do usuário. Assim, em projetos futuros poderia-se utilizar uma interface web para operação e um servidor em nuvem, tornando o sistema ainda mais acessível. 
+% %\subsection{Comunicação com o controlador}
+% %\subsubsection{Supervisório}
+% % \begin{figure}[H]
+% %     \centering
+% %     \begin{tikzpicture}
+% %     \begin{axis}[xlabel=t,
+% %                  ylabel=$Y$ ]
+% %     \addplot table [y=level, x=t, ]{valve-log.dat};
+% %     %\addlegendentry{Esboço de G x T}
+% %     \end{axis}
+% %     \end{tikzpicture}
+% %     \caption{Esboço de Y x t}
+% %     \label{fig:esboco}
+% % \end{figure}
+
+% \newpage
+% \section*{Anexos}
+% Os arquivos anexos estão em uma pasta junto ao arquivo do relatório pdf. Organizados conforme a estrutura abaixo:
+% \begin{enumerate}[label={Anexo \Roman*:}]
+%     \item Código para comparação dos modelos - script \texttt{analysis/data-analisys.m}.
+%     \item Dados da resposta step - arquivo \texttt{analysis/step\_test.csv}.
+%     \item Programa em \textit{python} para testes da planta e controle simples (testes sem interface) - arquivo \texttt{model/PID.py}.
+%     \item Planilha contendo dados dos ensaios dos controladores - arquivo \texttt{analysis/Dados dos ensaios dos controladores.ods}.
+%     \item Simulação da planta - Arquivo de projeto \factorio{}: \texttt{factoryio/Control.io}
+%     \item Código do supervisório no \EE{} e arquivos associados - pasta \texttt{Supervisorio/}.
+%     \item Código de controle da planta integração com a interface em \Py{} - pasta \texttt{final/}.
+%     \item Testes de servidores para comunicação com a interface - pasta \texttt{tests/}.
+%     %\item Apresentações do projeto (pdf dos slides)
+% \end{enumerate}
+
+% \newpage
+% \section{Referências Bibliográficas}
+% \begin{itemize}
+% \item \href{https://sigaa.ifsc.edu.br/sigaa/portais/discente/discente.jsf#}{Bibliografia externa disponibilizada pelos professores através do Sigaa}
+% \item \href{https://sigaa.ifsc.edu.br/}{\textit{Slides} de aula com deduções disponibilizadas pelos professores através do Sigaa}
+% \label{ref:pymodbus}
+% \item \href{https://github.com/riptideio/pymodbus}{Repositório Oficial Pymodbus} e  \href{https://pymodbus.readthedocs.io/}{Documentação Oficial PyModbus}
+% \item \href{https://github.com/sourceperl/pyModbusTCP}{Repositório Oficial pyModusTCP}
+% \item \href{https://github.com/m-lundberg/simple-pid}{Repositório Oficial SimplePID} e \href{https://simple-pid.readthedocs.io/en/latest/}{Documentação Oficial simplePID}
+
+% \end{itemize}
+
+
 

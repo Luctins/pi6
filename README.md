@@ -4,6 +4,6 @@ Este repositório é referente à matéria de projeto integrador VI, do curso de
 
 Documenta o projeto da "Máquina de marcação à Laser Cartesiana"
 
-[Máquina Completa](https://github.com/Luctins/pi6/blob/main/doc/artigo/img/maquina-final.jpg?raw=true)
+[Máquina Completa](https://github.com/Luctins/pi6/blob/main/doc/artigo/img/maquina-final.jpg)
 
 Elaborado no semestre de 2021.2
